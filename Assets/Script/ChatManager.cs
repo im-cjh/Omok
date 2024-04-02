@@ -21,10 +21,16 @@ public class ChatManager : MonoBehaviour
     public void OnEndEditEventMethod()
     {
         //enter키를 누르면 대화 입력창에 입력된 내용을 대화창에 출력 
-        if(Input.GetKeyUp(KeyCode.Return)) 
+        if(Input.GetKeyDown(KeyCode.Return))
         {
             UpdateChat();
         }
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            UpdateChat();
+        }
+        
     }
 
     public void UpdateChat()
@@ -47,11 +53,19 @@ public class ChatManager : MonoBehaviour
 
     public void Update()
     {
-        //대화 입력창이 포커스 되어있지 않을 때 Enter키를 누르면
-        if(Input.GetKeyDown(KeyCode.Return) && inputField.isFocused == false)
+        if(Input.GetKeyDown(KeyCode.Return))
         {
-            //대화 입력창의 포커스를 활성화 
-            inputField.ActivateInputField();
+            //대화 입력창이 포커스 되어있지 않을 때 Enter키를 누르면
+            if (inputField.isFocused == false)
+            {
+                //대화 입력창의 포커스를 활성화 
+                inputField.ActivateInputField();
+            }
+            else
+            {
+                //대화 내용 전송
+
+            }
         }
     }
 }
