@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da9120bea7597014c85edcf18c2f1e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  user_name: 
 --- !u!4 &64316417
 Transform:
   m_ObjectHideFlags: 0
@@ -483,7 +484,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1521096569}
         m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
-        m_MethodName: StartLoginCoroutine
+        m_MethodName: StartLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2013,6 +2014,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emailField: {fileID: 280497647}
   pwdField: {fileID: 1410962461}
+  user: {fileID: 64316416}
 --- !u!1 &1690618472
 GameObject:
   m_ObjectHideFlags: 0
