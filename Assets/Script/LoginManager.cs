@@ -27,7 +27,8 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     private TMP_InputField pwdField;
 
-    public User user;
+    [SerializeField]
+    User user;
 
     private async Task LoginAsync()
     {
@@ -55,6 +56,7 @@ public class LoginManager : MonoBehaviour
                     user.user_name = jsonObj["name"].ToString();
                     //¼º°ø
                     //return ret;
+                    user.ConnectToServer();
                     SceneChanger.ChangeLobbyScene();
                 }
                 else

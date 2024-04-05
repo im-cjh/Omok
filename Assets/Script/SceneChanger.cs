@@ -12,4 +12,10 @@ public class SceneChanger : MonoBehaviour
     {
         SceneManager.LoadScene("Lobby 2"); // SceneManager를 사용하여 씬을 로드하고 전환
     }
+
+
+    public static void ChangeGameScene()
+    {
+        SceneManager.LoadScene("Main");
+    }
 }
