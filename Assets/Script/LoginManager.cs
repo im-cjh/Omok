@@ -8,9 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoginManager : MonoBehaviour
 {
+    public MessageManager messageManager;
+
+
+    [SerializeField]
+    private Text ID_text;
+
+    [SerializeField]
+    private Text pwd_text;
+
     [SerializeField]
     private TMP_InputField emailField;
 
@@ -28,7 +38,7 @@ public class LoginManager : MonoBehaviour
         // HttpClient 인스턴스 생성
         using (HttpClient client = new HttpClient())
         {
-
+            client.Timeout = TimeSpan.FromSeconds(5); // 10초로 시간 제한 설정
             try
             {
                 // HTTP POST 요청을 만들고 전송합니다.
@@ -43,8 +53,6 @@ public class LoginManager : MonoBehaviour
                     JObject jsonObj = JObject.Parse(jsonString);
 
                     user.user_name = jsonObj["name"].ToString();
-
-                    Console.WriteLine("서버 응답:");
                     //성공
                     //return ret;
                     SceneChanger.ChangeLobbyScene();
@@ -52,13 +60,16 @@ public class LoginManager : MonoBehaviour
                 else
                 {
                     // 요청이 실패한 경우
-                    Console.WriteLine("요청 실패: " + response.StatusCode);
+                    ID_text.text = "이메일 - 유효하지 않은 아이디 또는 비밀번호입니다.";
+                    ID_text.color = Color.red;
+                    pwd_text.text = "비밀번호 - 유효하지 않은 아이디 또는 비밀번호입니다.";
+                    pwd_text.color = Color.red;
                 }
             }
             catch (Exception e)
             {
                 // 오류 처리
-                Console.WriteLine("오류 발생: " + e.Message);
+                messageManager.ShowMessage("네트워크를 확인해주세요");
             }
         }
         //실패
