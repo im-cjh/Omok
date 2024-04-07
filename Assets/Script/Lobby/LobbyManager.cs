@@ -9,7 +9,7 @@ public class LobbyManager : MonoBehaviour
     public ScrollRect scrollView;
 
     [SerializeField]
-    private Transform parentContent; //대화가 출력되는 ScrollView의 Content
+    private Transform _transform; 
 
     [SerializeField]
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
@@ -19,10 +19,30 @@ public class LobbyManager : MonoBehaviour
             UpdateChat();
     }
 
+    public void ReloadRoom()
+    {
+        //대화 내용 출력을 위해 Text UI 생성 
+        GameObject roomObject = Instantiate(textChatPrefab, _transform);
+        RoomUI roomUI = roomObject.GetComponent<RoomUI>();
+        //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
+        if (roomUI != null)
+        {
+            Room r = new Room();
+            r.roomName = "1";
+            r.hostName = "2";
+            r.numParticipants = 3;
+            roomUI.SetRoomInfo(r);
+        }
+        Canvas.ForceUpdateCanvases();
+        scrollView.verticalNormalizedPosition = 0f;
+    }
+
+    
+
     public void UpdateChat()
     {
         //대화 내용 출력을 위해 Text UI 생성 
-        GameObject clone = Instantiate(textChatPrefab, parentContent);
+        GameObject clone = Instantiate(textChatPrefab, _transform);
 
         //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
         //clone.GetComponent<TextMeshProUGUI>().text = $"{ID}: {inputField.text}";

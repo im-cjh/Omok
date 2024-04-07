@@ -54,5 +54,7 @@ public class ClickHandler : MonoBehaviour
     {
         //stonePrefab을 position에 배치하면 됩니다.
         Instantiate(stonePrefab, position, Quaternion.identity);
+
+        //서버에 position전송
     }
 }
