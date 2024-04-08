@@ -53,10 +53,10 @@ public class LoginManager : MonoBehaviour
                     string jsonString = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(jsonString);
 
-                    user.user_name = jsonObj["name"].ToString();
+                    user.userName = jsonObj["name"].ToString();
                     //¼º°ø
                     //return ret;
-                    user.ConnectToServer();
+                    await user.ConnectToServer();
                     SceneChanger.ChangeLobbyScene();
                 }
                 else

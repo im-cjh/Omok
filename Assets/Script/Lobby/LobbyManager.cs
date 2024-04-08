@@ -14,6 +14,15 @@ public class LobbyManager : MonoBehaviour
     [SerializeField]
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
 
+    private User _user;
+
+    private void Start()
+    {
+        Debug.Log("시");
+        _user = FindObjectOfType<User>();
+        _user.Request(eReqType.Rooms);
+    }
+
     public void OnEndEditEventMethod()
     {
             UpdateChat();
@@ -21,6 +30,8 @@ public class LobbyManager : MonoBehaviour
 
     public void ReloadRoom()
     {
+        _user.Request(eReqType.Rooms);
+
         //대화 내용 출력을 위해 Text UI 생성 
         GameObject roomObject = Instantiate(textChatPrefab, _transform);
         RoomUI roomUI = roomObject.GetComponent<RoomUI>();

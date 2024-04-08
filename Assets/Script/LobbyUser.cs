@@ -4,14 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Demo : MonoBehaviour
+public class LobbyUser : MonoBehaviour
 {
     public Text _userName;
 
     // Start is called before the first frame update
     void Start()
     {
-        string un = FindObjectOfType<User>().user_name;
+        string un = FindObjectOfType<User>().userName;
         _userName.text = un;
     }
 }
