@@ -10,6 +10,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEditor.PackageManager.Requests;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public enum eReqType
 {
@@ -25,30 +26,7 @@ public class User : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _session = new Session();
+        _session = FindObjectOfType<Session>();
         DontDestroyOnLoad(this);
-    }
-
-    public async Task ConnectToServer()
-    {
-        try
-        {
-            _session = new Session();
-            await _session.Connect();
-        }
-        catch (Exception e) 
-        {
-            Debug.LogException(e);
-        }
-    }
-
-    public async Task Request(eReqType pReqType)
-    {
-        switch (pReqType) 
-        {
-            case eReqType.Rooms:
-                _session.RequestRooms();
-                break;
-        }
     }
 }

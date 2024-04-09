@@ -30,6 +30,13 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     User user;
 
+    private Session _session;
+
+    private void Start()
+    {
+        _session = FindObjectOfType<Session>();
+    }
+
     private async Task LoginAsync()
     {
         // HTTP POST 요청을 보낼 엔드포인트 URL
@@ -56,7 +63,7 @@ public class LoginManager : MonoBehaviour
                     user.userName = jsonObj["name"].ToString();
                     //성공
                     //return ret;
-                    await user.ConnectToServer();
+                    await _session.Connect();
                     SceneChanger.ChangeLobbyScene();
                 }
                 else

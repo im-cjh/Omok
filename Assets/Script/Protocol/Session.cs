@@ -12,8 +12,20 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class Session
+public class DataSentEventArgs : EventArgs
 {
+    public Room Data { get; }
+
+    public DataSentEventArgs(Room data)
+    {
+        Data = data;
+    }
+}
+
+public class Session : MonoBehaviour
+{
+    public event EventHandler<DataSentEventArgs> DataSent;
+
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
     private int serverPort = 7777; // 서버 포트 번호
 
@@ -23,16 +35,25 @@ public class Session
     private byte[] _recvBuffer = new byte[1024];
 
     // Start is called before the first frame update
-    public Session()
+    private void Start()
     {
         _client = new TcpClient();
-        //_stream = _client.GetStream();
+        DontDestroyOnLoad(this);
     }
-
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public async Task Request(eReqType pReqType)
+    {
+        switch (pReqType)
+        {
+            case eReqType.Rooms:
+                RequestRooms();
+                break;
+        }
     }
 
     private void HandlePacket(Span<byte> buffer, int len, ePacketID ID)
@@ -47,12 +68,21 @@ public class Session
 
     }
 
+    protected virtual void OnDataSent(Room data)
+    {
+        DataSent?.Invoke(this, new DataSentEventArgs(data));
+    }
+
     unsafe void Handle_RoomMessage(byte[] buffer, int len)
     {
         int headerSize = sizeof(PacketHeader);
         Protocol.Room message = Protocol.Room.Parser.ParseFrom(buffer, headerSize, len - headerSize);
 
-        
+        Room room = new Room();
+        room.roomName = message.RoomName;
+        room.hostName = message.HostName;
+        room.numParticipants = message.NumPlayers;
+        OnDataSent(room);
     }
 
     private unsafe void ReceiveCallback(IAsyncResult result)
@@ -120,7 +150,7 @@ public class Session
         }
     }
     
-    public async Task RequestRooms()
+    private async Task RequestRooms()
     {
         Debug.Log(2);
         try

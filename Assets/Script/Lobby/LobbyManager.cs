@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,14 +16,49 @@ public class LobbyManager : MonoBehaviour
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
 
     private User _user;
+    private Session _session;
 
     private void Start()
     {
-        Debug.Log("시");
-        _user = FindObjectOfType<User>();
-        _user.Request(eReqType.Rooms);
+        try
+        {
+            Debug.Log("시");
+            _user = FindObjectOfType<User>(); 
+            _session = FindObjectOfType<Session>();
+            _session.DataSent += (sender, args) => {
+                // 이벤트 발생 시 데이터를 수신하는 로직을 수행
+                OnRecvRoom(args.Data);
+            };
+            _session.Request(eReqType.Rooms);
+        }
+        catch (Exception e) 
+        {
+            return;
+        }
     }
-
+    public void OnRecvRoom(Room room)
+    {
+        try
+        {
+            GameObject roomObject = Instantiate(textChatPrefab, _transform);
+            RoomUI roomUI = roomObject.GetComponent<RoomUI>();
+            //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
+            if (roomUI != null)
+            {
+                Room r = new Room();
+                r.roomName = room.roomName;
+                r.hostName = room.hostName;
+                r.numParticipants = room.numParticipants;
+                roomUI.SetRoomInfo(r);
+            }
+            Canvas.ForceUpdateCanvases();
+            scrollView.verticalNormalizedPosition = 0f;
+        }
+        catch(Exception e) 
+        {
+            return;
+        }
+    }
     public void OnEndEditEventMethod()
     {
             UpdateChat();
@@ -30,7 +66,7 @@ public class LobbyManager : MonoBehaviour
 
     public void ReloadRoom()
     {
-        _user.Request(eReqType.Rooms);
+        _session.Request(eReqType.Rooms);
 
         //대화 내용 출력을 위해 Text UI 생성 
         GameObject roomObject = Instantiate(textChatPrefab, _transform);
