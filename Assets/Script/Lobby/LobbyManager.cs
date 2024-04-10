@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Collections.Specialized.BitVector32;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -22,13 +23,10 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("시");
             _user = FindObjectOfType<User>(); 
             _session = FindObjectOfType<Session>();
-            _session.DataSent += (sender, args) => {
-                // 이벤트 발생 시 데이터를 수신하는 로직을 수행
-                OnRecvRoom(args.Data);
-            };
+            _session.onRoomReceived += OnRecvRoom;
+
             _session.Request(eReqType.Rooms);
         }
         catch (Exception e) 

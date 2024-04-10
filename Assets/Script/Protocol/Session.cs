@@ -1,3 +1,4 @@
+using PimDeWitte.UnityMainThreadDispatcher;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DataSentEventArgs : EventArgs
 {
@@ -24,8 +26,7 @@ public class DataSentEventArgs : EventArgs
 
 public class Session : MonoBehaviour
 {
-    public event EventHandler<DataSentEventArgs> DataSent;
-
+    public event Action<Room> onRoomReceived;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
     private int serverPort = 7777; // 서버 포트 번호
 
@@ -68,9 +69,10 @@ public class Session : MonoBehaviour
 
     }
 
-    protected virtual void OnDataSent(Room data)
+    public void ReceiveRoomFromServer(Room room)
     {
-        DataSent?.Invoke(this, new DataSentEventArgs(data));
+        // 받아온 Room 데이터를 이벤트로 전달
+        onRoomReceived.Invoke(room);
     }
 
     unsafe void Handle_RoomMessage(byte[] buffer, int len)
@@ -82,7 +84,12 @@ public class Session : MonoBehaviour
         room.roomName = message.RoomName;
         room.hostName = message.HostName;
         room.numParticipants = message.NumPlayers;
-        OnDataSent(room);
+
+        //ReceiveRoomFromServer(room);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            onRoomReceived(room);
+        });
     }
 
     private unsafe void ReceiveCallback(IAsyncResult result)
