@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using PimDeWitte.UnityMainThreadDispatcher;
 using System;
 using System.Collections;
@@ -26,7 +27,7 @@ public class DataSentEventArgs : EventArgs
 
 public class Session : MonoBehaviour
 {
-    public event Action<Room> onRoomReceived;
+    public event Action<List<Room>> onRoomReceived;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
     private int serverPort = 7777; // 서버 포트 번호
 
@@ -63,32 +64,54 @@ public class Session : MonoBehaviour
         switch (ID)
         {
             case ePacketID.ROOMS_MESSAGE:
-                Handle_RoomMessage(byteBuffer, len);
+                Handle_RoomsMessage(byteBuffer, len);
                 break;
         }
 
     }
 
-    public void ReceiveRoomFromServer(Room room)
+    public void ReceiveRoomFromServer(List<Room> rooms)
     {
         // 받아온 Room 데이터를 이벤트로 전달
-        onRoomReceived.Invoke(room);
+        onRoomReceived.Invoke(rooms);
     }
 
-    unsafe void Handle_RoomMessage(byte[] buffer, int len)
+    //unsafe void Handle_RoomMessage(byte[] buffer, int len)
+    //{
+    //    int headerSize = sizeof(PacketHeader);
+    //    Protocol.Room message = Protocol.Room.Parser.ParseFrom(buffer, headerSize, len - headerSize);
+
+    //    Room room = new Room();
+    //    room.roomName = message.RoomName;
+    //    room.hostName = message.HostName;
+    //    room.numParticipants = message.NumPlayers;
+
+    //    //ReceiveRoomFromServer(room);
+    //    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+    //    {
+    //        onRoomReceived(room);
+    //    });
+    //}
+
+    unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
         int headerSize = sizeof(PacketHeader);
-        Protocol.Room message = Protocol.Room.Parser.ParseFrom(buffer, headerSize, len - headerSize);
-
-        Room room = new Room();
-        room.roomName = message.RoomName;
-        room.hostName = message.HostName;
-        room.numParticipants = message.NumPlayers;
+        Protocol.S2CRoomList rooms = Protocol.S2CRoomList.Parser.ParseFrom(buffer, headerSize, len - headerSize);
+        List<Room> roomList = new List<Room>(); 
+        for(int i = 0; i < rooms.Rooms.Count; i += 1)
+        {
+            Protocol.Room r = rooms.Rooms[i];
+            Room room = new Room();
+            room.roomName = r.RoomName;
+            room.hostName = r.HostName;
+            room.numParticipants = r.NumPlayers;
+            roomList.Add(room);
+        }
 
         //ReceiveRoomFromServer(room);
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            onRoomReceived(room);
+            onRoomReceived(roomList);
         });
     }
 

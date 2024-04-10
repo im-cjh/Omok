@@ -27,7 +27,7 @@ namespace Protocol {
             "Cg5Qcm90b2NvbC5wcm90bxIIUHJvdG9jb2wiLgoKUF9DaGF0Um9vbRIOCgZy",
             "b29tSUQYASABKA0SEAoIcm9vbU5hbWUYAiABKAkiPwoEUm9vbRIQCghyb29t",
             "TmFtZRgBIAEoCRIQCghob3N0TmFtZRgCIAEoCRITCgtudW1fcGxheWVycxgD",
-            "IAEoBSIsCgtTMkNSb29tTGlzdBIdCgVyb29tcxgBIAEoCzIOLlByb3RvY29s",
+            "IAEoBSIsCgtTMkNSb29tTGlzdBIdCgVyb29tcxgBIAMoCzIOLlByb3RvY29s",
             "LlJvb21iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
@@ -89,9 +89,6 @@ namespace Protocol {
     /// <summary>Field number for the "roomID" field.</summary>
     public const int RoomIDFieldNumber = 1;
     private uint roomID_;
-    /// <summary>
-    /// 채팅방의 고유 식별자
-    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public uint RoomID {
@@ -104,9 +101,6 @@ namespace Protocol {
     /// <summary>Field number for the "roomName" field.</summary>
     public const int RoomNameFieldNumber = 2;
     private string roomName_ = "";
-    /// <summary>
-    /// 채팅방의 이름
-    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public string RoomName {
@@ -570,7 +564,7 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public S2CRoomList(S2CRoomList other) : this() {
-      rooms_ = other.rooms_ != null ? other.rooms_.Clone() : null;
+      rooms_ = other.rooms_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -582,14 +576,13 @@ namespace Protocol {
 
     /// <summary>Field number for the "rooms" field.</summary>
     public const int RoomsFieldNumber = 1;
-    private global::Protocol.Room rooms_;
+    private static readonly pb::FieldCodec<global::Protocol.Room> _repeated_rooms_codec
+        = pb::FieldCodec.ForMessage(10, global::Protocol.Room.Parser);
+    private readonly pbc::RepeatedField<global::Protocol.Room> rooms_ = new pbc::RepeatedField<global::Protocol.Room>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Protocol.Room Rooms {
+    public pbc::RepeatedField<global::Protocol.Room> Rooms {
       get { return rooms_; }
-      set {
-        rooms_ = value;
-      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -607,7 +600,7 @@ namespace Protocol {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Rooms, other.Rooms)) return false;
+      if(!rooms_.Equals(other.rooms_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -615,7 +608,7 @@ namespace Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (rooms_ != null) hash ^= Rooms.GetHashCode();
+      hash ^= rooms_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -634,10 +627,7 @@ namespace Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (rooms_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Rooms);
-      }
+      rooms_.WriteTo(output, _repeated_rooms_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -648,10 +638,7 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (rooms_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Rooms);
-      }
+      rooms_.WriteTo(ref output, _repeated_rooms_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -662,9 +649,7 @@ namespace Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (rooms_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Rooms);
-      }
+      size += rooms_.CalculateSize(_repeated_rooms_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -677,12 +662,7 @@ namespace Protocol {
       if (other == null) {
         return;
       }
-      if (other.rooms_ != null) {
-        if (rooms_ == null) {
-          Rooms = new global::Protocol.Room();
-        }
-        Rooms.MergeFrom(other.Rooms);
-      }
+      rooms_.Add(other.rooms_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -699,10 +679,7 @@ namespace Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            if (rooms_ == null) {
-              Rooms = new global::Protocol.Room();
-            }
-            input.ReadMessage(Rooms);
+            rooms_.AddEntriesFrom(input, _repeated_rooms_codec);
             break;
           }
         }
@@ -721,10 +698,7 @@ namespace Protocol {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            if (rooms_ == null) {
-              Rooms = new global::Protocol.Room();
-            }
-            input.ReadMessage(Rooms);
+            rooms_.AddEntriesFrom(ref input, _repeated_rooms_codec);
             break;
           }
         }

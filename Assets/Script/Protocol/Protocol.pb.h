@@ -531,23 +531,23 @@ class S2CRoomList final :
   enum : int {
     kRoomsFieldNumber = 1,
   };
-  // .Protocol.Room rooms = 1;
-  bool has_rooms() const;
+  // repeated .Protocol.Room rooms = 1;
+  int rooms_size() const;
   private:
-  bool _internal_has_rooms() const;
+  int _internal_rooms_size() const;
   public:
   void clear_rooms();
-  const ::Protocol::Room& rooms() const;
-  PROTOBUF_NODISCARD ::Protocol::Room* release_rooms();
-  ::Protocol::Room* mutable_rooms();
-  void set_allocated_rooms(::Protocol::Room* rooms);
+  ::Protocol::Room* mutable_rooms(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Room >*
+      mutable_rooms();
   private:
-  const ::Protocol::Room& _internal_rooms() const;
-  ::Protocol::Room* _internal_mutable_rooms();
+  const ::Protocol::Room& _internal_rooms(int index) const;
+  ::Protocol::Room* _internal_add_rooms();
   public:
-  void unsafe_arena_set_allocated_rooms(
-      ::Protocol::Room* rooms);
-  ::Protocol::Room* unsafe_arena_release_rooms();
+  const ::Protocol::Room& rooms(int index) const;
+  ::Protocol::Room* add_rooms();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Room >&
+      rooms() const;
 
   // @@protoc_insertion_point(class_scope:Protocol.S2CRoomList)
  private:
@@ -557,7 +557,7 @@ class S2CRoomList final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::Protocol::Room* rooms_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Room > rooms_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -772,94 +772,44 @@ inline void Room::set_num_players(int32_t value) {
 
 // S2CRoomList
 
-// .Protocol.Room rooms = 1;
-inline bool S2CRoomList::_internal_has_rooms() const {
-  return this != internal_default_instance() && _impl_.rooms_ != nullptr;
+// repeated .Protocol.Room rooms = 1;
+inline int S2CRoomList::_internal_rooms_size() const {
+  return _impl_.rooms_.size();
 }
-inline bool S2CRoomList::has_rooms() const {
-  return _internal_has_rooms();
+inline int S2CRoomList::rooms_size() const {
+  return _internal_rooms_size();
 }
 inline void S2CRoomList::clear_rooms() {
-  if (GetArenaForAllocation() == nullptr && _impl_.rooms_ != nullptr) {
-    delete _impl_.rooms_;
-  }
-  _impl_.rooms_ = nullptr;
+  _impl_.rooms_.Clear();
 }
-inline const ::Protocol::Room& S2CRoomList::_internal_rooms() const {
-  const ::Protocol::Room* p = _impl_.rooms_;
-  return p != nullptr ? *p : reinterpret_cast<const ::Protocol::Room&>(
-      ::Protocol::_Room_default_instance_);
-}
-inline const ::Protocol::Room& S2CRoomList::rooms() const {
-  // @@protoc_insertion_point(field_get:Protocol.S2CRoomList.rooms)
-  return _internal_rooms();
-}
-inline void S2CRoomList::unsafe_arena_set_allocated_rooms(
-    ::Protocol::Room* rooms) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.rooms_);
-  }
-  _impl_.rooms_ = rooms;
-  if (rooms) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Protocol.S2CRoomList.rooms)
-}
-inline ::Protocol::Room* S2CRoomList::release_rooms() {
-  
-  ::Protocol::Room* temp = _impl_.rooms_;
-  _impl_.rooms_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::Protocol::Room* S2CRoomList::unsafe_arena_release_rooms() {
-  // @@protoc_insertion_point(field_release:Protocol.S2CRoomList.rooms)
-  
-  ::Protocol::Room* temp = _impl_.rooms_;
-  _impl_.rooms_ = nullptr;
-  return temp;
-}
-inline ::Protocol::Room* S2CRoomList::_internal_mutable_rooms() {
-  
-  if (_impl_.rooms_ == nullptr) {
-    auto* p = CreateMaybeMessage<::Protocol::Room>(GetArenaForAllocation());
-    _impl_.rooms_ = p;
-  }
-  return _impl_.rooms_;
-}
-inline ::Protocol::Room* S2CRoomList::mutable_rooms() {
-  ::Protocol::Room* _msg = _internal_mutable_rooms();
+inline ::Protocol::Room* S2CRoomList::mutable_rooms(int index) {
   // @@protoc_insertion_point(field_mutable:Protocol.S2CRoomList.rooms)
-  return _msg;
+  return _impl_.rooms_.Mutable(index);
 }
-inline void S2CRoomList::set_allocated_rooms(::Protocol::Room* rooms) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete _impl_.rooms_;
-  }
-  if (rooms) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(rooms);
-    if (message_arena != submessage_arena) {
-      rooms = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, rooms, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  _impl_.rooms_ = rooms;
-  // @@protoc_insertion_point(field_set_allocated:Protocol.S2CRoomList.rooms)
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Room >*
+S2CRoomList::mutable_rooms() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S2CRoomList.rooms)
+  return &_impl_.rooms_;
+}
+inline const ::Protocol::Room& S2CRoomList::_internal_rooms(int index) const {
+  return _impl_.rooms_.Get(index);
+}
+inline const ::Protocol::Room& S2CRoomList::rooms(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S2CRoomList.rooms)
+  return _internal_rooms(index);
+}
+inline ::Protocol::Room* S2CRoomList::_internal_add_rooms() {
+  return _impl_.rooms_.Add();
+}
+inline ::Protocol::Room* S2CRoomList::add_rooms() {
+  ::Protocol::Room* _add = _internal_add_rooms();
+  // @@protoc_insertion_point(field_add:Protocol.S2CRoomList.rooms)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::Room >&
+S2CRoomList::rooms() const {
+  // @@protoc_insertion_point(field_list:Protocol.S2CRoomList.rooms)
+  return _impl_.rooms_;
 }
 
 #ifdef __GNUC__
