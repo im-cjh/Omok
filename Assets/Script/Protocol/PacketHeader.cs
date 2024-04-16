@@ -6,7 +6,8 @@ using UnityEngine;
 public enum ePacketID : UInt16
 {
     CHAT_MESSAGE = 0,
-    ROOMS_MESSAGE = 1
+    ROOMS_MESSAGE = 1,
+    CONTENT_MESSAGE = 2
 }
 
 [Serializable]

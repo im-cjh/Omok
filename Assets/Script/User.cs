@@ -12,11 +12,6 @@ using UnityEngine;
 using UnityEditor.PackageManager.Requests;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
-public enum eReqType
-{
-    Rooms
-}
-
 public class User : MonoBehaviour
 {
     public string userName;

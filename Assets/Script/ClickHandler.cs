@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,9 +14,16 @@ public class ClickHandler : MonoBehaviour
     private GameObject currentStonePreview; // 바둑알 미리보기 프리팹
     private const float cell = 34.4f;
 
+    private Session _session;
+
+    private void Start()
+    {
+        _session = FindObjectOfType<Session>();
+    }
+
     void Update()
     {
-        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //좌표 보정
         float adjustedX = (Mathf.Round((pos.x*100) / cell) * cell)/100;
         float adjustedY = (Mathf.Round((pos.y*100) / cell) * cell)/100;
@@ -31,14 +39,14 @@ public class ClickHandler : MonoBehaviour
             
             pos.x = adjustedX; 
             pos.y = adjustedY;
-            pos.z = -1;
             PlaceStone(pos);
         }
     }
 
-    private void UpdatePreviewPosition(Vector3 position)
+    private void UpdatePreviewPosition(Vector2 position)
     {
-        Vector3 clampedPos = new Vector3(Mathf.Clamp(position.x, -3.096f, 3.096f), Mathf.Clamp(position.y, -3.096f, 3.096f), position.z);
+        Vector2 clampedPos = new Vector2(Mathf.Clamp(position.x, -3.096f, 3.096f), Mathf.Clamp(position.y, -3.096f, 3.096f));
+        //Vector3 clampedPos = position;
         // 미리보기 오브젝트를 생성하거나 위치 업데이트
         if (currentStonePreview == null)
         {
@@ -50,11 +58,15 @@ public class ClickHandler : MonoBehaviour
         }
     }
 
-    void PlaceStone(Vector3 position)
+     void PlaceStone(Vector2 position)
     {
         //stonePrefab을 position에 배치하면 됩니다.
         Instantiate(stonePrefab, position, Quaternion.identity);
 
         //서버에 position전송
+        Task.Run(async () =>
+        {
+            await _session.Send<Vector2>(ePacketID.CONTENT_MESSAGE);
+        });
     }
 }

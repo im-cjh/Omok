@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +28,7 @@ public class LobbyManager : MonoBehaviour
             _session = FindObjectOfType<Session>();
             _session.onRoomReceived += OnRecvRoom;
 
-            _session.Request(eReqType.Rooms);
+            ReloadRoom();
         }
         catch (Exception e) 
         {
@@ -61,7 +62,11 @@ public class LobbyManager : MonoBehaviour
 
     public void ReloadRoom()
     {
-        _session.Request(eReqType.Rooms);
+        
+        Task.Run(async () =>
+        {
+            await _session.Send<int>(ePacketID.ROOMS_MESSAGE);
+        });
     }
 
     

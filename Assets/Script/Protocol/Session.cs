@@ -48,16 +48,6 @@ public class Session : MonoBehaviour
         
     }
 
-    public async Task Request(eReqType pReqType)
-    {
-        switch (pReqType)
-        {
-            case eReqType.Rooms:
-                RequestRooms();
-                break;
-        }
-    }
-
     private void HandlePacket(Span<byte> buffer, int len, ePacketID ID)
     {
         byte[] byteBuffer = buffer.ToArray();
@@ -76,22 +66,7 @@ public class Session : MonoBehaviour
         onRoomReceived.Invoke(rooms);
     }
 
-    //unsafe void Handle_RoomMessage(byte[] buffer, int len)
-    //{
-    //    int headerSize = sizeof(PacketHeader);
-    //    Protocol.Room message = Protocol.Room.Parser.ParseFrom(buffer, headerSize, len - headerSize);
-
-    //    Room room = new Room();
-    //    room.roomName = message.RoomName;
-    //    room.hostName = message.HostName;
-    //    room.numParticipants = message.NumPlayers;
-
-    //    //ReceiveRoomFromServer(room);
-    //    UnityMainThreadDispatcher.Instance().Enqueue(() =>
-    //    {
-    //        onRoomReceived(room);
-    //    });
-    //}
+    
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
@@ -100,7 +75,7 @@ public class Session : MonoBehaviour
         List<Room> roomList = new List<Room>(); 
         for(int i = 0; i < rooms.Rooms.Count; i += 1)
         {
-            Protocol.Room r = rooms.Rooms[i];
+            Protocol.P_Room r = rooms.Rooms[i];
             Room room = new Room();
             room.roomName = r.RoomName;
             room.hostName = r.HostName;
@@ -155,7 +130,7 @@ public class Session : MonoBehaviour
         try
         {
             await _client.ConnectAsync(serverAddress, serverPort);
-            //_client.Connect(serverAddress, serverPort);
+            
             _stream = _client.GetStream();
             Console.WriteLine("Connected to server!");
             _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, ReceiveCallback, null);
@@ -167,12 +142,20 @@ public class Session : MonoBehaviour
         }
     }
 
-    public async Task Send(byte[] pSendBuffer, ePacketID pMessageID)
+    public async Task Send<T>(ePacketID pMessageID, T pSendBuffer = default)
     {
         switch(pMessageID) 
         {
             case ePacketID.ROOMS_MESSAGE:
                 await RequestRooms();
+                break;
+
+            case ePacketID.CONTENT_MESSAGE:
+                if (pSendBuffer is Vector2)
+                {
+                    Vector2 sendBuffer = (Vector2)(object)pSendBuffer;
+                    await SendContent(sendBuffer);
+                }
                 break;
 
             default:
@@ -182,7 +165,6 @@ public class Session : MonoBehaviour
     
     private async Task RequestRooms()
     {
-        Debug.Log(2);
         try
         {
             PacketHeader packetHeader = new PacketHeader();
@@ -200,10 +182,8 @@ public class Session : MonoBehaviour
 
                 // 최종 바이트 배열 가져오기
                 byte[] finalBytes = memoryStream.ToArray();
-                _stream.Write(finalBytes, 0, finalBytes.Length);//tmp
                 
-                Debug.Log(_recvBuffer);
-                //await _stream.WriteAsync(finalBytes, 0, finalBytes.Length);
+                await _stream.WriteAsync(finalBytes, 0, finalBytes.Length);
             }
         }
         catch (Exception e)
@@ -212,4 +192,37 @@ public class Session : MonoBehaviour
         }
     }
 
+    private async Task SendContent(Int32 roomID, Vector2 pPos)
+    {
+        Debug.Log(3);
+        try
+        {
+            Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+            pkt.YPos = pPos.y  ;
+
+            PacketHeader packetHeader = new PacketHeader();
+            packetHeader.size = (UInt16)Marshal.SizeOf(typeof(PacketHeader));
+            packetHeader.id = (UInt16)ePacketID.CONTENT_MESSAGE;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                // PacketHeader를 바이트 배열로 변환하여 MemoryStream에 쓰기
+                using (var writer = new BinaryWriter(memoryStream, Encoding.Default, true))
+                {
+                    writer.Write(packetHeader.size);
+                    writer.Write(packetHeader.id);
+                }
+                
+                // 최종 바이트 배열 가져오기
+                byte[] finalBytes = memoryStream.ToArray();
+
+                Debug.Log(_recvBuffer);
+                await _stream.WriteAsync(finalBytes, 0, finalBytes.Length);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error while sending data: " + e.Message);
+        }
+    }
 }
