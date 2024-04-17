@@ -14,6 +14,7 @@ using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class DataSentEventArgs : EventArgs
 {
@@ -142,87 +143,8 @@ public class Session : MonoBehaviour
         }
     }
 
-    public async Task Send<T>(ePacketID pMessageID, T pSendBuffer = default)
+    public async Task Send(byte[] pSendBuffer)
     {
-        switch(pMessageID) 
-        {
-            case ePacketID.ROOMS_MESSAGE:
-                await RequestRooms();
-                break;
-
-            case ePacketID.CONTENT_MESSAGE:
-                if (pSendBuffer is Vector2)
-                {
-                    Vector2 sendBuffer = (Vector2)(object)pSendBuffer;
-                    await SendContent(sendBuffer);
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-    
-    private async Task RequestRooms()
-    {
-        try
-        {
-            PacketHeader packetHeader = new PacketHeader();
-            packetHeader.size = (UInt16)Marshal.SizeOf(typeof(PacketHeader));
-            packetHeader.id     = (UInt16)ePacketID.ROOMS_MESSAGE;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                // PacketHeader를 바이트 배열로 변환하여 MemoryStream에 쓰기
-                using (var writer = new BinaryWriter(memoryStream, Encoding.Default, true))
-                {
-                    writer.Write(packetHeader.size);
-                    writer.Write(packetHeader.id);
-                }
-
-                // 최종 바이트 배열 가져오기
-                byte[] finalBytes = memoryStream.ToArray();
-                
-                await _stream.WriteAsync(finalBytes, 0, finalBytes.Length);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error while sending data: " + e.Message);
-        }
-    }
-
-    private async Task SendContent(Int32 roomID, Vector2 pPos)
-    {
-        Debug.Log(3);
-        try
-        {
-            Protocol.P_GameContent pkt = new Protocol.P_GameContent();
-            pkt.YPos = pPos.y  ;
-
-            PacketHeader packetHeader = new PacketHeader();
-            packetHeader.size = (UInt16)Marshal.SizeOf(typeof(PacketHeader));
-            packetHeader.id = (UInt16)ePacketID.CONTENT_MESSAGE;
-
-            using (var memoryStream = new MemoryStream())
-            {
-                // PacketHeader를 바이트 배열로 변환하여 MemoryStream에 쓰기
-                using (var writer = new BinaryWriter(memoryStream, Encoding.Default, true))
-                {
-                    writer.Write(packetHeader.size);
-                    writer.Write(packetHeader.id);
-                }
-                
-                // 최종 바이트 배열 가져오기
-                byte[] finalBytes = memoryStream.ToArray();
-
-                Debug.Log(_recvBuffer);
-                await _stream.WriteAsync(finalBytes, 0, finalBytes.Length);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error while sending data: " + e.Message);
-        }
+        await _stream.WriteAsync(pSendBuffer, 0, pSendBuffer.Length);
     }
 }

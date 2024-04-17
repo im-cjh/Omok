@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -63,10 +64,21 @@ public class ClickHandler : MonoBehaviour
         //stonePrefab을 position에 배치하면 됩니다.
         Instantiate(stonePrefab, position, Quaternion.identity);
 
+        Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+        pkt.XPos = position.x;
+        pkt.YPos = position.y;
+        byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
+
+        _session.Send(sendBuffer);
         //서버에 position전송
-        Task.Run(async () =>
-        {
-            await _session.Send<Vector2>(ePacketID.CONTENT_MESSAGE);
-        });
+        //Task.Run(async () =>
+        //{
+        //    Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+        //    pkt.XPos = position.x;
+        //    pkt.YPos = position.y;
+        //    byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
+
+        //    await _session.Send(sendBuffer);
+        //});
     }
 }

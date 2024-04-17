@@ -35,6 +35,7 @@ public class LobbyManager : MonoBehaviour
             return;
         }
     }
+
     public void OnRecvRoom(List<Room> room)
     {
         try
@@ -65,11 +66,10 @@ public class LobbyManager : MonoBehaviour
         
         Task.Run(async () =>
         {
-            await _session.Send<int>(ePacketID.ROOMS_MESSAGE);
+            byte[] sendBuffer = PacketHandler.MakeMemoryStream(ePacketID.ROOMS_MESSAGE).ToArray();
+            await _session.Send(sendBuffer);
         });
     }
-
-    
 
     public void UpdateChat()
     {
