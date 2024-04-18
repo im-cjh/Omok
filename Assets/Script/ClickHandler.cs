@@ -65,6 +65,7 @@ public class ClickHandler : MonoBehaviour
         Instantiate(stonePrefab, position, Quaternion.identity);
 
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+        pkt.RoomID = 123;
         pkt.XPos = position.x;
         pkt.YPos = position.y;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);

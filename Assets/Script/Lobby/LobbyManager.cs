@@ -63,12 +63,13 @@ public class LobbyManager : MonoBehaviour
 
     public void ReloadRoom()
     {
-        
-        Task.Run(async () =>
-        {
-            byte[] sendBuffer = PacketHandler.MakeMemoryStream(ePacketID.ROOMS_MESSAGE).ToArray();
-            await _session.Send(sendBuffer);
-        });
+        byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);
+        _session.Send(sendBuffer);
+        //Task.Run(async () =>
+        //{
+        //   byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);
+        //   await _session.Send(sendBuffer);
+        //});
     }
 
     public void UpdateChat()
