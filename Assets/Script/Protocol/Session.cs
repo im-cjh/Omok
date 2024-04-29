@@ -29,6 +29,8 @@ public class Session : MonoBehaviour
 {
     public event Action<List<Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
+
+    public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
     private int serverPort = 7777; // 서버 포트 번호
 
@@ -36,11 +38,13 @@ public class Session : MonoBehaviour
     private NetworkStream _stream;
     private bool _isConnected = false;
     private byte[] _recvBuffer = new byte[1024];
+    
 
     // Start is called before the first frame update
     private void Start()
     {
         _client = new TcpClient();
+        _user = FindObjectOfType<User>();
         DontDestroyOnLoad(this);
     }
     // Update is called once per frame
@@ -60,7 +64,18 @@ public class Session : MonoBehaviour
             case ePacketID.CONTENT_MESSAGE:
                 Handle_ContentMessage(byteBuffer, len); 
                 break;
+            case ePacketID.ENTER_ROOM:
+                Handle_EnterRoomMessage(byteBuffer, len);
+                break;
         }
+
+    }
+
+    unsafe private void Handle_EnterRoomMessage(byte[] byteBuffer, int len)
+    {
+        int headerSize = sizeof(PacketHeader);
+        //Protocol
+        SceneChanger.ChangeGameScene();
 
     }
 
@@ -91,6 +106,7 @@ public class Session : MonoBehaviour
         {
             Protocol.P_Room r = rooms.Rooms[i];
             Room room = new Room();
+            room.roomId = r.RoomID;
             room.roomName = r.RoomName;
             room.hostName = r.HostName;
             room.numParticipants = r.NumPlayers;
@@ -148,6 +164,11 @@ public class Session : MonoBehaviour
             _stream = _client.GetStream();
             Console.WriteLine("Connected to server!");
             _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, ReceiveCallback, null);
+
+            Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess(); 
+            pkt.UserID = _user.id;
+            byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
+            Send(sendBuffer);
         }
         catch (Exception ex)
         {

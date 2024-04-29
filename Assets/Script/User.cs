@@ -14,12 +14,9 @@ public class User : MonoBehaviour
     public string userName;
     public int id;
 
-    private Session _session;
-
     // Start is called before the first frame update
     void Start()
     {
-        _session = FindObjectOfType<Session>();
         DontDestroyOnLoad(this);
     }
 }

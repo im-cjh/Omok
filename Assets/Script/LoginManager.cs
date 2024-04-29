@@ -61,7 +61,8 @@ public class LoginManager : MonoBehaviour
                     JObject jsonObj = JObject.Parse(jsonString);
 
                     user.userName = jsonObj["name"].ToString();
-                    user.id = 1;
+                    user.id = Convert.ToInt32(jsonObj["id"].ToString());
+                    
                     //¼º°ø
                     //return ret;
                     await _session.Connect();

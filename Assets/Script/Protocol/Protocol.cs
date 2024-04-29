@@ -33,8 +33,8 @@ namespace Protocol {
             "AiABKAkSEwoLbnVtX3BsYXllcnMYAyABKAUiLgoMQzJTRW50ZXJSb29tEg4K",
             "BnJvb21JRBgBIAEoBRIOCgZ1c2VySUQYAiABKAUiTwoNUF9HYW1lQ29udGVu",
             "dBIOCgZyb29tSUQYASABKAUSDAoEeVBvcxgCIAEoAhIMCgR4UG9zGAMgASgC",
-            "EhIKCnN0b25lQ29sb3IYBCABKAUiHQoLUzJDUGxheWVySUQSDgoGdXNlcklE",
-            "GAEgASgFYgZwcm90bzM="));
+            "EhIKCnN0b25lQ29sb3IYBCABKAUiIQoPQzJTTG9naW5TdWNjZXNzEg4KBnVz",
+            "ZXJJRBgBIAEoBWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -44,7 +44,7 @@ namespace Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2SMakeRoom), global::Protocol.C2SMakeRoom.Parser, new[]{ "RoomName", "HostName", "NumPlayers" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2SEnterRoom), global::Protocol.C2SEnterRoom.Parser, new[]{ "RoomID", "UserID" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.P_GameContent), global::Protocol.P_GameContent.Parser, new[]{ "RoomID", "YPos", "XPos", "StoneColor" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.S2CPlayerID), global::Protocol.S2CPlayerID.Parser, new[]{ "UserID" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2SLoginSuccess), global::Protocol.C2SLoginSuccess.Parser, new[]{ "UserID" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1581,16 +1581,16 @@ namespace Protocol {
 
   }
 
-  public sealed partial class S2CPlayerID : pb::IMessage<S2CPlayerID>
+  public sealed partial class C2SLoginSuccess : pb::IMessage<C2SLoginSuccess>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<S2CPlayerID> _parser = new pb::MessageParser<S2CPlayerID>(() => new S2CPlayerID());
+    private static readonly pb::MessageParser<C2SLoginSuccess> _parser = new pb::MessageParser<C2SLoginSuccess>(() => new C2SLoginSuccess());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<S2CPlayerID> Parser { get { return _parser; } }
+    public static pb::MessageParser<C2SLoginSuccess> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1606,7 +1606,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CPlayerID() {
+    public C2SLoginSuccess() {
       OnConstruction();
     }
 
@@ -1614,15 +1614,15 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CPlayerID(S2CPlayerID other) : this() {
+    public C2SLoginSuccess(C2SLoginSuccess other) : this() {
       userID_ = other.userID_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CPlayerID Clone() {
-      return new S2CPlayerID(this);
+    public C2SLoginSuccess Clone() {
+      return new C2SLoginSuccess(this);
     }
 
     /// <summary>Field number for the "userID" field.</summary>
@@ -1640,12 +1640,12 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as S2CPlayerID);
+      return Equals(other as C2SLoginSuccess);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(S2CPlayerID other) {
+    public bool Equals(C2SLoginSuccess other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1718,7 +1718,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(S2CPlayerID other) {
+    public void MergeFrom(C2SLoginSuccess other) {
       if (other == null) {
         return;
       }
