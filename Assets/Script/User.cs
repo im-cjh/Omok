@@ -6,15 +6,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEditor.PackageManager.Requests;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class User : MonoBehaviour
 {
     public string userName;
+    public int id;
 
     private Session _session;
 

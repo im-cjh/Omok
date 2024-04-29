@@ -11,7 +11,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -28,7 +27,8 @@ public class DataSentEventArgs : EventArgs
 
 public class Session : MonoBehaviour
 {
-    public event Action<List<Room>> onRoomReceived;
+    public event Action<List<Room>> roomRecvEvent;
+    public event Action<Protocol.P_GameContent> contentRecvEvent;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
     private int serverPort = 7777; // 서버 포트 번호
 
@@ -57,17 +57,30 @@ public class Session : MonoBehaviour
             case ePacketID.ROOMS_MESSAGE:
                 Handle_RoomsMessage(byteBuffer, len);
                 break;
+            case ePacketID.CONTENT_MESSAGE:
+                Handle_ContentMessage(byteBuffer, len); 
+                break;
         }
 
     }
 
-    public void ReceiveRoomFromServer(List<Room> rooms)
+    unsafe private void Handle_ContentMessage(byte[] pBuffer, int pLen)
     {
-        // 받아온 Room 데이터를 이벤트로 전달
-        onRoomReceived.Invoke(rooms);
+        int headerSize = sizeof(PacketHeader);
+        Protocol.P_GameContent content  = Protocol.P_GameContent.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+        
+        //ReceiveRoomFromServer(room);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            contentRecvEvent(content);
+        });
     }
 
-    
+    public void RecvRoomFromServer(List<Room> rooms)
+    {
+        // 받아온 Room 데이터를 이벤트로 전달
+        roomRecvEvent.Invoke(rooms);
+    }
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
@@ -87,7 +100,7 @@ public class Session : MonoBehaviour
         //ReceiveRoomFromServer(room);
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            onRoomReceived(roomList);
+            roomRecvEvent(roomList);
         });
     }
 
@@ -105,8 +118,8 @@ public class Session : MonoBehaviour
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
                         return;
-
-                    HandlePacket(_recvBuffer, header->size, ePacketID.ROOMS_MESSAGE);
+                    
+                    HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
                 }
 
                 // 다시 비동기적으로 데이터 수신을 시작합니다.
