@@ -23,7 +23,7 @@ public class LobbyManager : MonoBehaviour
 
     private Session _session;
     private Room _selectedRoom;
-    private List<Room> _rooms;
+    private Dictionary<int, Room> _rooms;
     private RoomManager _roomManager;
 
     public static LobbyManager Instance
@@ -78,7 +78,7 @@ public class LobbyManager : MonoBehaviour
         Debug.Log("pRoom"+pRoom.roomName);
     }
 
-    public void OnRecvRoom(List<Room> rooms)
+    public void OnRecvRoom(Dictionary<int, Room> rooms)
     {
         _rooms = rooms;
         foreach (Transform child in _transform)
@@ -88,11 +88,11 @@ public class LobbyManager : MonoBehaviour
 
         try
         {
-            foreach(Room room in _rooms)
+            foreach(var room in _rooms)
             {
                 GameObject roomObject = Instantiate(textChatPrefab, _transform);
                 RoomUI roomUI = roomObject.GetComponent<RoomUI>();
-                roomUI.SetRoomInfo(room);
+                roomUI.SetRoomInfo(room.Value);
             }
             
             Canvas.ForceUpdateCanvases();

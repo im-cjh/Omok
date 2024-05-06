@@ -27,8 +27,8 @@ public class DataSentEventArgs : EventArgs
 
 public class Session : MonoBehaviour
 {
-    public event Action<List<Room>> roomRecvEvent;
-    public event Action<Protocol.P_GameContent> contentRecvEvent;
+    public event Action<Dictionary<int, Room>> roomRecvEvent;
+    public event Action<Protocol.P_GameContent> contentRecvEvent; 
 
     public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
@@ -91,17 +91,17 @@ public class Session : MonoBehaviour
         });
     }
 
-    public void RecvRoomFromServer(List<Room> rooms)
-    {
-        // 받아온 Room 데이터를 이벤트로 전달
-        roomRecvEvent.Invoke(rooms);
-    }
+    //public void RecvRoomFromServer(List<Room> rooms)
+    //{
+    //    // 받아온 Room 데이터를 이벤트로 전달
+    //    roomRecvEvent.Invoke(rooms);
+    //}
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
         int headerSize = sizeof(PacketHeader);
         Protocol.S2CRoomList rooms = Protocol.S2CRoomList.Parser.ParseFrom(buffer, headerSize, len - headerSize);
-        List<Room> roomList = new List<Room>(); 
+        Dictionary<int, Room> roomList = new Dictionary<int, Room>(); 
         for(int i = 0; i < rooms.Rooms.Count; i += 1)
         {
             Protocol.P_Room r = rooms.Rooms[i];
@@ -110,7 +110,7 @@ public class Session : MonoBehaviour
             room.roomName = r.RoomName;
             room.hostName = r.HostName;
             room.numParticipants = r.NumPlayers;
-            roomList.Add(room);
+            roomList[room.roomId] = room;
         }
 
         //ReceiveRoomFromServer(room);
