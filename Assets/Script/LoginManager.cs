@@ -66,6 +66,14 @@ public class LoginManager : MonoBehaviour
                     //¼º°ø
                     //return ret;
                     await _session.Connect();
+
+                    Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess();
+                    pkt.UserName = "sryShen";
+                    pkt.UserID = FindObjectOfType<User>().id;
+
+                    byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
+                    await _session.Send(sendBuffer);
+
                     SceneChanger.ChangeLobbyScene();
                 }
                 else

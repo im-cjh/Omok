@@ -24,7 +24,6 @@ public class LobbyManager : MonoBehaviour
     private Session _session;
     private Room _selectedRoom;
     private Dictionary<int, Room> _rooms;
-    private RoomManager _roomManager;
 
     public static LobbyManager Instance
     {
@@ -51,7 +50,7 @@ public class LobbyManager : MonoBehaviour
         {
             _session = FindObjectOfType<Session>();
             _session.roomRecvEvent += OnRecvRoom;
-            _roomManager = FindObjectOfType<RoomManager>();
+
             ReloadRoom();
         }
         catch (Exception e)
@@ -75,7 +74,7 @@ public class LobbyManager : MonoBehaviour
     public void OnClickedRoom(Room pRoom)
     {
         _selectedRoom = pRoom;
-        Debug.Log("pRoom"+pRoom.roomName);
+        //Debug.Log("pRoom"+pRoom.roomName);
     }
 
     public void OnRecvRoom(Dictionary<int, Room> rooms)
@@ -103,12 +102,7 @@ public class LobbyManager : MonoBehaviour
             return;
         }
     }
-
-    public void OnRecvEnterRoom()
-    {
-        SceneChanger.ChangeGameScene();
-    }
-
+    
     public void OnEndEditEventMethod()
     {
             UpdateChat();

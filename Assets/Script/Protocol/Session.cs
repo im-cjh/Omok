@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -29,6 +30,7 @@ public class Session : MonoBehaviour
 {
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent; 
+    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent; 
 
     public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
@@ -45,6 +47,7 @@ public class Session : MonoBehaviour
     {
         _client = new TcpClient();
         _user = FindObjectOfType<User>();
+
         DontDestroyOnLoad(this);
     }
     // Update is called once per frame
@@ -67,16 +70,28 @@ public class Session : MonoBehaviour
             case ePacketID.ENTER_ROOM:
                 Handle_EnterRoomMessage(byteBuffer, len);
                 break;
+            
         }
 
     }
 
-    unsafe private void Handle_EnterRoomMessage(byte[] byteBuffer, int len)
+    unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
     {
         int headerSize = sizeof(PacketHeader);
-        //Protocol
-        SceneChanger.ChangeGameScene();
+        List<Protocol.P_Player> players = new List<Protocol.P_Player>();
+        Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
+        for (int i = 0; i < pkt.Players.Count; i += 1)
+        {
+            Protocol.P_Player p = pkt.Players[i];
+        }
+
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            enterRoomRecvEvent(players);
+        });
+
+        SceneChanger.ChangeGameScene();
     }
 
     unsafe private void Handle_ContentMessage(byte[] pBuffer, int pLen)
@@ -120,7 +135,7 @@ public class Session : MonoBehaviour
         });
     }
 
-    private unsafe void ReceiveCallback(IAsyncResult result)
+    private unsafe void RecvCallback(IAsyncResult result)
     {
         Debug.Log("Im called");
         int bytesRead = _stream.EndRead(result); // 데이터 수신을 완료합니다.
@@ -139,7 +154,7 @@ public class Session : MonoBehaviour
                 }
 
                 // 다시 비동기적으로 데이터 수신을 시작합니다.
-                _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, ReceiveCallback, null);
+                _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
             }
             else
             {
@@ -151,7 +166,7 @@ public class Session : MonoBehaviour
         catch(Exception e) 
         {
             Debug.Log(e);
-            _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, ReceiveCallback, null);
+            _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
         }
     }
 
@@ -163,12 +178,7 @@ public class Session : MonoBehaviour
             
             _stream = _client.GetStream();
             Console.WriteLine("Connected to server!");
-            _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, ReceiveCallback, null);
-
-            Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess(); 
-            pkt.UserID = _user.id;
-            byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
-            Send(sendBuffer);
+            _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
         }
         catch (Exception ex)
         {
