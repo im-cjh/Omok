@@ -30,7 +30,7 @@ public class Session : MonoBehaviour
 {
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent; 
-    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent; 
+    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
 
     public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
@@ -87,14 +87,25 @@ public class Session : MonoBehaviour
         {
             Protocol.P_Player p = pkt.Players[i];
             players.Add(p);
+            Debug.Log(p.UserName);
         }
-
+        
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            enterRoomRecvEvent(players);
+            //Debug.Log(players.Count);
+
+            if (players != null)
+            {
+                Debug.Log("Players.count = " + players.Count);
+               enterRoomRecvEvent(players);
+            }
+            else
+            {
+                Debug.Log("Sibal jabatDDa");
+
+            }
         });
 
-        SceneChanger.ChangeGameScene();
     }
 
     unsafe private void Handle_ContentMessage(byte[] pBuffer, int pLen)
@@ -153,7 +164,6 @@ public class Session : MonoBehaviour
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
                     {
-                        HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
                         Debug.Log("설마 너냐");
                         Debug.Log(bytesRead + " : " + header->size + (ePacketID)header->id);
                         return;

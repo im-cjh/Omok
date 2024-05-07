@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,9 +18,22 @@ public class RoomManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _session = FindObjectOfType<Session>();
-        _session.enterRoomRecvEvent += OnPlayerEntered;
-        
+        try
+        {
+            _session = FindObjectOfType<Session>();
+            _session.enterRoomRecvEvent += OnPlayerEntered;
+
+            users = new RoomUser[2];
+            GameObject tmp = gameObject.transform.GetChild(1).gameObject;
+            users[0] = tmp.GetComponent<RoomUser>();
+            
+            tmp = gameObject.transform.GetChild(2).gameObject;
+            users[1] = tmp.GetComponent<RoomUser>();
+        }
+        catch (Exception e)
+        {
+            Debug.Log("user error");
+        }
     }
 
     // Update is called once per frame
@@ -30,10 +44,20 @@ public class RoomManager : MonoBehaviour
 
     public void OnPlayerEntered(List<Protocol.P_Player> pPlayers)
     {
+        Debug.Log(pPlayers.Count);
+        //Debug.Log(pPlayers.Count);
+
         for(int i = 0; i < pPlayers.Count; i++) 
         {
-            users[i].SetInfo(pPlayers[i].UserName);
+            if (pPlayers[i].UserName == null)
+            {
+                Debug.Log("s");
+            }
+            else
+            {
+                Debug.Log("e");
+                users[i].SetInfo(pPlayers[i].UserName);
+            }
         }
-        Debug.Log("s");
     }
 }

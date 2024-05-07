@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.UI;
 using static System.Collections.Specialized.BitVector32;
@@ -64,11 +63,14 @@ public class LobbyManager : MonoBehaviour
         if (_selectedRoom == null)
             return;
 
+        SceneChanger.ChangeGameScene();
+
         Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
         pkt.RoomID = _selectedRoom.roomId;
         pkt.UserID = _session._user.id;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_ROOM);
         _session.Send(sendBuffer);
+
     }
 
     public void OnClickedRoom(Room pRoom)
