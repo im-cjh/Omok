@@ -58,6 +58,7 @@ public class Session : MonoBehaviour
 
     private void HandlePacket(Span<byte> buffer, int len, ePacketID ID)
     {
+        Debug.Log("HandlePacket called");
         byte[] byteBuffer = buffer.ToArray();
         switch (ID)
         {
@@ -77,6 +78,7 @@ public class Session : MonoBehaviour
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
     {
+        Debug.Log("Enter Room called");
         int headerSize = sizeof(PacketHeader);
         List<Protocol.P_Player> players = new List<Protocol.P_Player>();
         Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
@@ -84,6 +86,7 @@ public class Session : MonoBehaviour
         for (int i = 0; i < pkt.Players.Count; i += 1)
         {
             Protocol.P_Player p = pkt.Players[i];
+            players.Add(p);
         }
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -114,6 +117,7 @@ public class Session : MonoBehaviour
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
+        
         int headerSize = sizeof(PacketHeader);
         Protocol.S2CRoomList rooms = Protocol.S2CRoomList.Parser.ParseFrom(buffer, headerSize, len - headerSize);
         Dictionary<int, Room> roomList = new Dictionary<int, Room>(); 
@@ -128,7 +132,7 @@ public class Session : MonoBehaviour
             roomList[room.roomId] = room;
         }
 
-        //ReceiveRoomFromServer(room);
+        
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             roomRecvEvent(roomList);
@@ -148,8 +152,21 @@ public class Session : MonoBehaviour
                     PacketHeader* header = (PacketHeader*)(ptr);
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
+                    {
+                        HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
+                        Debug.Log("설마 너냐");
+                        Debug.Log(bytesRead + " : " + header->size + (ePacketID)header->id);
                         return;
-                    
+                    }
+                    if(bytesRead > header->size)
+                    {
+                        Debug.Log("A");
+                    }
+                    else if (bytesRead == header->size)
+                    {
+                        Debug.Log("B");
+                    }
+
                     HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
                 }
 

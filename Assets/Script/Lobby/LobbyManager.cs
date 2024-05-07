@@ -79,6 +79,7 @@ public class LobbyManager : MonoBehaviour
 
     public void OnRecvRoom(Dictionary<int, Room> rooms)
     {
+        Debug.Log("OnRecvRoom Called");
         _rooms = rooms;
         foreach (Transform child in _transform)
         {
@@ -99,6 +100,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch(Exception e) 
         {
+            Debug.Log("OnRecvRoom's error Called");
             return;
         }
     }
