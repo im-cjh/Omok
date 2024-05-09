@@ -37,6 +37,7 @@ public class ClickHandler : MonoBehaviour
 
     private void OnRecvContent(P_GameContent pContent)
     {
+        Debug.Log("이거까진 됨");
         try
         {
             Vector2 pos = new Vector2 (pContent.XPos, pContent.YPos);
@@ -66,7 +67,7 @@ public class ClickHandler : MonoBehaviour
             
             pos.x = adjustedX; 
             pos.y = adjustedY;
-            PlaceStone(pos, _stoneColor);
+            PlaceStoneAndSend(pos, _stoneColor);
         }
     }
 
@@ -85,28 +86,47 @@ public class ClickHandler : MonoBehaviour
         }
     }
 
-     void PlaceStone(Vector2 pPosition, eStone pColor)
+    void PlaceStone(Vector2 pPosition, eStone pColor)
     {
+        Debug.Log("sadsa");
         //stonePrefab을 position에 배치하면 됩니다.
         Instantiate(stonePrefab, pPosition, Quaternion.identity);
 
         {
             int adjY = (int)(pPosition.y / 0.34);
             int adjX = (int)(pPosition.x / 0.34);
+            Debug.Log(adjY + ", " + adjX + ")");
             _stones[adjY, adjX] = _stoneColor;
         }
+    }
+
+    void PlaceStoneAndSend(Vector2 pPosition, eStone pColor)
+    {
+        PlaceStone(pPosition, pColor);
+
+        Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+        pkt.RoomID = LobbyManager.Instance.GetSelectedRoomID();
+        Debug.Log("RoomID: " + pkt.RoomID);
+        pkt.XPos = pPosition.x;
+        pkt.YPos = pPosition.y;
+        pkt.StoneColor = (int)pColor;
+        byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
+
+        _session.Send(sendBuffer);
 
         //서버에 position전송
-        Task.Run(async () =>
-        {
-            Protocol.P_GameContent pkt = new Protocol.P_GameContent();
-            pkt.RoomID = (int)ePacketID.CONTENT_MESSAGE;
-            pkt.XPos = pPosition.x;
-            pkt.YPos = pPosition.y;
-            pkt.StoneColor = (int)pColor;
-            byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
+        //Task.Run(async () =>
+        //{
+        //    Protocol.P_GameContent pkt = new Protocol.P_GameContent();
+        //    pkt.RoomID = LobbyManager.Instance.GetSelectedRoomID();
+        //    Debug.Log("RoomID: " + pkt.RoomID);
+        //    pkt.XPos = pPosition.x;
+        //    pkt.YPos = pPosition.y;
+        //    pkt.StoneColor = (int)pColor;
+        //    byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
-            await _session.Send(sendBuffer);
-        });
+        //    await _session.Send(sendBuffer);
+        //});
+
     }
 }

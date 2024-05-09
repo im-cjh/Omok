@@ -49,8 +49,8 @@ public class LobbyManager : MonoBehaviour
         {
             _session = FindObjectOfType<Session>();
             _session.roomRecvEvent += OnRecvRoom;
-
             ReloadRoom();
+            DontDestroyOnLoad(this);
         }
         catch (Exception e)
         {
@@ -76,12 +76,12 @@ public class LobbyManager : MonoBehaviour
     public void OnClickedRoom(Room pRoom)
     {
         _selectedRoom = pRoom;
-        //Debug.Log("pRoom"+pRoom.roomName);
+        
     }
 
     public void OnRecvRoom(Dictionary<int, Room> rooms)
     {
-        Debug.Log("OnRecvRoom Called");
+        
         _rooms = rooms;
         foreach (Transform child in _transform)
         {
@@ -135,5 +135,10 @@ public class LobbyManager : MonoBehaviour
 
         Canvas.ForceUpdateCanvases();
         scrollView.verticalNormalizedPosition = 0f;
+    }
+
+    public int GetSelectedRoomID()
+    {
+        return _selectedRoom.roomId;
     }
 }

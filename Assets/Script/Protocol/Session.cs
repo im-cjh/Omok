@@ -152,7 +152,6 @@ public class Session : MonoBehaviour
 
     private unsafe void RecvCallback(IAsyncResult result)
     {
-        Debug.Log("Im called");
         int bytesRead = _stream.EndRead(result); // 데이터 수신을 완료합니다.
         try
         {
@@ -164,19 +163,8 @@ public class Session : MonoBehaviour
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
                     {
-                        Debug.Log("설마 너냐");
-                        Debug.Log(bytesRead + " : " + header->size + (ePacketID)header->id);
                         return;
                     }
-                    if(bytesRead > header->size)
-                    {
-                        Debug.Log("A");
-                    }
-                    else if (bytesRead == header->size)
-                    {
-                        Debug.Log("B");
-                    }
-
                     HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
                 }
 

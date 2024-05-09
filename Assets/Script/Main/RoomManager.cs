@@ -44,7 +44,6 @@ public class RoomManager : MonoBehaviour
 
     public void OnPlayerEntered(List<Protocol.P_Player> pPlayers)
     {
-        Debug.Log(pPlayers.Count);
         //Debug.Log(pPlayers.Count);
 
         for(int i = 0; i < pPlayers.Count; i++) 
