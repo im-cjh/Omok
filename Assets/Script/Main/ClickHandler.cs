@@ -8,9 +8,9 @@ using UnityEngine.UIElements;
 
 enum eStone
 {
-    None,
-    BLACK,
-    WHITE,
+    None = 0,
+    BLACK = 1,
+    WHITE = 2,
 }
 
 public class ClickHandler : MonoBehaviour
@@ -37,7 +37,6 @@ public class ClickHandler : MonoBehaviour
 
     private void OnRecvContent(P_GameContent pContent)
     {
-        Debug.Log("¿Ã∞≈±Ó¡¯ µ ");
         try
         {
             Vector2 pos = new Vector2 (pContent.XPos, pContent.YPos);
@@ -93,8 +92,8 @@ public class ClickHandler : MonoBehaviour
         Instantiate(stonePrefab, pPosition, Quaternion.identity);
 
         {
-            int adjY = (int)(pPosition.y / 0.34);
-            int adjX = (int)(pPosition.x / 0.34);
+            int adjY = 9+(int)(pPosition.y / 0.34);
+            int adjX = 9 + (int)(pPosition.x / 0.34);
             Debug.Log(adjY + ", " + adjX + ")");
             _stones[adjY, adjX] = _stoneColor;
         }
@@ -107,8 +106,8 @@ public class ClickHandler : MonoBehaviour
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
         pkt.RoomID = LobbyManager.Instance.GetSelectedRoomID();
         Debug.Log("RoomID: " + pkt.RoomID);
-        pkt.XPos = pPosition.x;
         pkt.YPos = pPosition.y;
+        pkt.XPos = pPosition.x;
         pkt.StoneColor = (int)pColor;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 

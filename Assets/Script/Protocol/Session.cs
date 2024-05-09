@@ -56,24 +56,40 @@ public class Session : MonoBehaviour
         
     }
 
-    private void HandlePacket(Span<byte> buffer, int len, ePacketID ID)
+    private void HandlePacket(Span<byte> pBuffer, int pLen, ePacketID pID)
     {
         Debug.Log("HandlePacket called");
-        byte[] byteBuffer = buffer.ToArray();
-        switch (ID)
+        byte[] byteBuffer = pBuffer.ToArray();
+        switch (pID)
         {
+            case ePacketID.CHAT_MESSAGE:
+                Handle_ChatMessage(byteBuffer, pLen);
+                break;
             case ePacketID.ROOMS_MESSAGE:
-                Handle_RoomsMessage(byteBuffer, len);
+                Handle_RoomsMessage(byteBuffer, pLen);
                 break;
             case ePacketID.CONTENT_MESSAGE:
-                Handle_ContentMessage(byteBuffer, len); 
+                Handle_ContentMessage(byteBuffer, pLen); 
                 break;
             case ePacketID.ENTER_ROOM:
-                Handle_EnterRoomMessage(byteBuffer, len);
+                Handle_EnterRoomMessage(byteBuffer, pLen);
                 break;
-            
+            case ePacketID.WINNER_MESSAGE:
+                Handle_WinnerMessage(byteBuffer, pLen);
+                break;
         }
 
+    }
+
+    private void Handle_ChatMessage(byte[] pByteBuffer, int pLen)
+    {
+        
+    }
+
+    unsafe private void Handle_WinnerMessage(byte[] pByteBuffer, int pLen)
+    {
+        Debug.Log("Winner: me");
+        
     }
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)

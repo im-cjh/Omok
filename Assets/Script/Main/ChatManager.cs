@@ -16,24 +16,28 @@ public class ChatManager : MonoBehaviour
     [SerializeField]
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
 
-    private string ID = "Docker"; //임시 아이디
+    private string _name; //임시 아이디
 
+    private void Start()
+    {
+        _name = User.Instance.userName;
+    }
     public void OnEndEditEventMethod()
     {
         //enter키를 누르면 대화 입력창에 입력된 내용을 대화창에 출력 
         if(Input.GetKeyDown(KeyCode.Return))
         {
-            UpdateChat();
+            UpdateChat(_name, inputField.text);
         }
 
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            UpdateChat();
+            UpdateChat(_name, inputField.text);
         }
         
     }
 
-    public void UpdateChat()
+    public void UpdateChat(string pName, string pContent)
     {
         if (inputField.text.Equals(""))
             return;
@@ -42,7 +46,7 @@ public class ChatManager : MonoBehaviour
         GameObject clone = Instantiate(textChatPrefab, parentContent);
 
         //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
-        clone.GetComponent<TextMeshProUGUI>().text = $"{ID}: {inputField.text}";
+        clone.GetComponent<TextMeshProUGUI>().text = $"{pName}: {pContent}";
 
         Canvas.ForceUpdateCanvases();
         scrollView.verticalNormalizedPosition = 0f;
