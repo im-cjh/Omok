@@ -11,6 +11,6 @@ public class LobbyUser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _userName.text = User.Instance.name;
+        _userName.text = User.Instance.userName;
     }
 }

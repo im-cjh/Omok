@@ -104,7 +104,7 @@ public class ClickHandler : MonoBehaviour
         PlaceStone(pPosition, pColor);
 
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
-        pkt.RoomID = LobbyManager.Instance.GetSelectedRoomID();
+        pkt.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
         Debug.Log("RoomID: " + pkt.RoomID);
         pkt.YPos = pPosition.y;
         pkt.XPos = pPosition.x;

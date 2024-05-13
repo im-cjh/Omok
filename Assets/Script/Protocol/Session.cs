@@ -31,6 +31,7 @@ public class Session : MonoBehaviour
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent; 
     public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
+    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
 
     public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
@@ -77,16 +78,31 @@ public class Session : MonoBehaviour
             case ePacketID.WINNER_MESSAGE:
                 Handle_WinnerMessage(byteBuffer, pLen);
                 break;
+            case ePacketID.QUIT_ROOM_MESSAGE:
+                Handle_QuitRoomMessage(byteBuffer, pLen);
+                break;
         }
 
     }
 
-    private void Handle_ChatMessage(byte[] pByteBuffer, int pLen)
+    private void Handle_QuitRoomMessage(byte[] pByteBuffer, int pLen)
     {
-        
+        throw new NotImplementedException();
     }
 
-    unsafe private void Handle_WinnerMessage(byte[] pByteBuffer, int pLen)
+    unsafe private void Handle_ChatMessage(byte[] pBuffer, int pLen)
+    {
+        int headerSize = sizeof(PacketHeader);
+        Protocol.S2CChatRoom content = Protocol.S2CChatRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+
+        //ReceiveRoomFromServer(room);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            //contentRecvEvent(content);
+        });
+    }
+
+    unsafe private void Handle_WinnerMessage(byte[] pBuffer, int pLen)
     {
         Debug.Log("Winner: me");
         

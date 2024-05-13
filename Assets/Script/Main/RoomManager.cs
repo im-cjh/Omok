@@ -29,6 +29,8 @@ public class RoomManager : MonoBehaviour
             
             tmp = gameObject.transform.GetChild(2).gameObject;
             users[1] = tmp.GetComponent<RoomUser>();
+
+            roomName.text = LobbyManager.Instance.GetSelectedRoom().roomName;
         }
         catch (Exception e)
         {
@@ -40,6 +42,16 @@ public class RoomManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void QuitRoom(User user)
+    {
+        _session
+    }
+
+    public void OnPlayerQuit(Protocol.P_Player pPlayer)
+    {
+        throw new NotImplementedException();
     }
 
     public void OnPlayerEntered(List<Protocol.P_Player> pPlayers)

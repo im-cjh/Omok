@@ -27,9 +27,6 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     private TMP_InputField pwdField;
 
-    [SerializeField]
-    User user;
-
     private Session _session;
 
     private void Start()
@@ -60,16 +57,16 @@ public class LoginManager : MonoBehaviour
                     string jsonString = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(jsonString);
 
-                    user.userName = jsonObj["name"].ToString();
-                    user.id = Convert.ToInt32(jsonObj["id"].ToString());
+                    User.Instance.userName = jsonObj["name"].ToString();
+                    User.Instance.id = Convert.ToInt32(jsonObj["id"].ToString());
                     
                     //¼º°ø
                     //return ret;
                     await _session.Connect();
 
                     Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess();
-                    pkt.UserName = "sryShen";
-                    pkt.UserID = FindObjectOfType<User>().id;
+                    pkt.UserName = User.Instance.userName;
+                    pkt.UserID = User.Instance.id;
 
                     byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
                     await _session.Send(sendBuffer);

@@ -58,6 +58,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    public void FastGameClick()
+    {
+
+    }
+
     public void EnterRoom()
     {
         if (_selectedRoom == null)
@@ -137,8 +142,8 @@ public class LobbyManager : MonoBehaviour
         scrollView.verticalNormalizedPosition = 0f;
     }
 
-    public int GetSelectedRoomID()
+    public Room GetSelectedRoom()
     {
-        return _selectedRoom.roomId;
+        return _selectedRoom;
     }
 }
