@@ -3,6 +3,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class  ChatStruct
+{
+    public string name;
+    public string content;
+}
+
 public class ChatManager : MonoBehaviour
 {
     public ScrollRect scrollView;
@@ -21,38 +27,36 @@ public class ChatManager : MonoBehaviour
     private void Start()
     {
         _name = User.Instance.userName;
+        Session.Instance.chatRoomRecvEvent += UpdateChat;
     }
     public void OnEndEditEventMethod()
     {
         //enter키를 누르면 대화 입력창에 입력된 내용을 대화창에 출력 
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
-            UpdateChat(_name, inputField.text);
+            UpdateChat(new ChatStruct { name = _name, content = inputField.text });
         }
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            UpdateChat(_name, inputField.text);
+            UpdateChat(new ChatStruct { name = _name, content = inputField.text });
         }
-        
     }
 
-    public void UpdateChat(string pName, string pContent)
+    public void UpdateChat(ChatStruct pChat)
     {
-        if (inputField.text.Equals(""))
+        Debug.Log("asdas");
+        if (pChat.content.Equals(""))
             return;
 
         //대화 내용 출력을 위해 Text UI 생성 
         GameObject clone = Instantiate(textChatPrefab, parentContent);
 
         //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
-        clone.GetComponent<TextMeshProUGUI>().text = $"{pName}: {pContent}";
+        clone.GetComponent<TextMeshProUGUI>().text = $"{pChat.name}: {pChat.content}";
 
         Canvas.ForceUpdateCanvases();
         scrollView.verticalNormalizedPosition = 0f;
-
-        //대화 입력창에 있는 내용 초기화 
-        inputField.text = "";
     }
 
     public void Update()
@@ -68,7 +72,14 @@ public class ChatManager : MonoBehaviour
             else
             {
                 //대화 내용 전송
+                Protocol.C2SChatRoom pkt = new Protocol.C2SChatRoom();
+                pkt.SenderName = _name;
+                pkt.Content = inputField.text;
 
+                byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
+                Session.Instance.Send(sendBuffer);
+                //대화 입력창에 있는 내용 초기화 
+                inputField.text = "";
             }
         }
     }

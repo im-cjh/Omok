@@ -23,16 +23,14 @@ public class ClickHandler : MonoBehaviour
 
     private GameObject currentStonePreview; // 바둑알 미리보기 프리팹
     private const float cell = 34.4f;
-
-    private Session _session;
     private eStone[,] _stones;
     private eStone _stoneColor = eStone.BLACK;
 
     private void Start()
     {
         _stones = new eStone[19, 19];
-        _session = FindObjectOfType<Session>();
-        _session.contentRecvEvent += OnRecvContent;
+        
+        Session.Instance.contentRecvEvent += OnRecvContent;
     }
 
     private void OnRecvContent(P_GameContent pContent)
@@ -111,7 +109,7 @@ public class ClickHandler : MonoBehaviour
         pkt.StoneColor = (int)pColor;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
-        _session.Send(sendBuffer);
+        Session.Instance.Send(sendBuffer);
 
         //서버에 position전송
         //Task.Run(async () =>

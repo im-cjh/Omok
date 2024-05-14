@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
+
 public class DataSentEventArgs : EventArgs
 {
     public Room Data { get; }
@@ -28,10 +29,12 @@ public class DataSentEventArgs : EventArgs
 
 public class Session : MonoBehaviour
 {
+    private static Session _instance;
+
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent; 
     public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
-    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
+    public event Action<ChatStruct> chatRoomRecvEvent;
 
     public User _user;
     private string serverAddress = "127.0.0.1"; // 서버 IP 주소
@@ -41,7 +44,25 @@ public class Session : MonoBehaviour
     private NetworkStream _stream;
     private bool _isConnected = false;
     private byte[] _recvBuffer = new byte[1024];
-    
+
+    public static Session Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Scene에서 RoomManager를 찾아 인스턴스화
+                _instance = FindObjectOfType<Session>();
+                if (_instance == null)
+                {
+                    // RoomManager가 없는 경우 새로 생성
+                    GameObject obj = new GameObject("session");
+                    _instance = obj.AddComponent<Session>();
+                }
+            }
+            return _instance;
+        }
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -92,13 +113,14 @@ public class Session : MonoBehaviour
 
     unsafe private void Handle_ChatMessage(byte[] pBuffer, int pLen)
     {
+        Debug.Log("handle chat meesage");
         int headerSize = sizeof(PacketHeader);
         Protocol.S2CChatRoom content = Protocol.S2CChatRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
         //ReceiveRoomFromServer(room);
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            //contentRecvEvent(content);
+            chatRoomRecvEvent(new ChatStruct{name =  content.SenderName, content = content.Content });
         });
     }
 
@@ -119,7 +141,6 @@ public class Session : MonoBehaviour
         {
             Protocol.P_Player p = pkt.Players[i];
             players.Add(p);
-            Debug.Log(p.UserName);
         }
         
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -129,12 +150,12 @@ public class Session : MonoBehaviour
             if (players != null)
             {
                 Debug.Log("Players.count = " + players.Count);
+                
                enterRoomRecvEvent(players);
             }
             else
             {
-                Debug.Log("Sibal jabatDDa");
-
+                
             }
         });
 

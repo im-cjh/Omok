@@ -19,8 +19,6 @@ public class LobbyManager : MonoBehaviour
 
     [SerializeField]
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
-
-    private Session _session;
     private Room _selectedRoom;
     private Dictionary<int, Room> _rooms;
 
@@ -47,8 +45,8 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            _session = FindObjectOfType<Session>();
-            _session.roomRecvEvent += OnRecvRoom;
+            //_session = FindObjectOfType<Session>();
+            Session.Instance.roomRecvEvent += OnRecvRoom;
             ReloadRoom();
             DontDestroyOnLoad(this);
         }
@@ -72,9 +70,9 @@ public class LobbyManager : MonoBehaviour
 
         Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
         pkt.RoomID = _selectedRoom.roomId;
-        pkt.UserID = _session._user.id;
+        pkt.UserID = Session.Instance._user.id;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_ROOM);
-        _session.Send(sendBuffer);
+        Session.Instance.Send(sendBuffer);
 
     }
 
@@ -126,7 +124,7 @@ public class LobbyManager : MonoBehaviour
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);
-            await _session.Send(sendBuffer);
+            await Session.Instance.Send(sendBuffer);
         });
     }
 

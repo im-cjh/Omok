@@ -13,15 +13,12 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     RoomUser[] users;
 
-
-    private Session _session;
     // Start is called before the first frame update
     void Start()
     {
         try
         {
-            _session = FindObjectOfType<Session>();
-            _session.enterRoomRecvEvent += OnPlayerEntered;
+            Session.Instance.enterRoomRecvEvent += OnPlayerEntered;
 
             users = new RoomUser[2];
             GameObject tmp = gameObject.transform.GetChild(1).gameObject;
@@ -46,7 +43,7 @@ public class RoomManager : MonoBehaviour
 
     public void QuitRoom(User user)
     {
-        _session
+        //_session
     }
 
     public void OnPlayerQuit(Protocol.P_Player pPlayer)
