@@ -32,23 +32,31 @@ public class ChatManager : MonoBehaviour
     public void OnEndEditEventMethod()
     {
         //enter키를 누르면 대화 입력창에 입력된 내용을 대화창에 출력 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            UpdateChat(new ChatStruct { name = _name, content = inputField.text });
+            Protocol.C2SChatRoom pkt = new Protocol.C2SChatRoom();
+            pkt.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
+            pkt.SenderName = _name;
+            pkt.Content = inputField.text;
+
+            byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
+            Session.Instance.Send(sendBuffer);
+            //대화 입력창에 있는 내용 초기화 
+            inputField.text = "";
+            Debug.Log("sibal");
         }
 
-        else if (Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            UpdateChat(new ChatStruct { name = _name, content = inputField.text });
-        }
     }
 
     public void UpdateChat(ChatStruct pChat)
     {
-        Debug.Log("asdas");
+        Debug.Log("UpdateChat");
+        Debug.Log(pChat.content);
         if (pChat.content.Equals(""))
+        {
+            Debug.Log("UpdateChat2");
             return;
-
+        }
         //대화 내용 출력을 위해 Text UI 생성 
         GameObject clone = Instantiate(textChatPrefab, parentContent);
 
@@ -68,18 +76,7 @@ public class ChatManager : MonoBehaviour
             {
                 //대화 입력창의 포커스를 활성화 
                 inputField.ActivateInputField();
-            }
-            else
-            {
-                //대화 내용 전송
-                Protocol.C2SChatRoom pkt = new Protocol.C2SChatRoom();
-                pkt.SenderName = _name;
-                pkt.Content = inputField.text;
-
-                byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
-                Session.Instance.Send(sendBuffer);
-                //대화 입력창에 있는 내용 초기화 
-                inputField.text = "";
+                Debug.Log("sibal2");
             }
         }
     }

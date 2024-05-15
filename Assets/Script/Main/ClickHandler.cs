@@ -85,14 +85,14 @@ public class ClickHandler : MonoBehaviour
 
     void PlaceStone(Vector2 pPosition, eStone pColor)
     {
-        Debug.Log("sadsa");
+        
         //stonePrefab을 position에 배치하면 됩니다.
         Instantiate(stonePrefab, pPosition, Quaternion.identity);
 
         {
             int adjY = 9+(int)(pPosition.y / 0.34);
             int adjX = 9 + (int)(pPosition.x / 0.34);
-            Debug.Log(adjY + ", " + adjX + ")");
+            
             _stones[adjY, adjX] = _stoneColor;
         }
     }

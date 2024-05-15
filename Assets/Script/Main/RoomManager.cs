@@ -59,11 +59,10 @@ public class RoomManager : MonoBehaviour
         {
             if (pPlayers[i].UserName == null)
             {
-                Debug.Log("s");
+                Debug.Log("pPlayers[i].UserName == null");
             }
             else
             {
-                Debug.Log("e");
                 users[i].SetInfo(pPlayers[i].UserName);
             }
         }

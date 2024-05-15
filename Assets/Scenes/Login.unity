@@ -1280,6 +1280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7554f5f5fa462a141a4d2b9cca94577b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _user: {fileID: 0}
 --- !u!4 &651542784
 Transform:
   m_ObjectHideFlags: 0
@@ -1413,7 +1414,6 @@ MonoBehaviour:
   pwd_text: {fileID: 160199742}
   emailField: {fileID: 280497647}
   pwdField: {fileID: 1410962461}
-  user: {fileID: 64316416}
 --- !u!4 &851082428
 Transform:
   m_ObjectHideFlags: 0

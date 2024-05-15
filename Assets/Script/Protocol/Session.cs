@@ -80,7 +80,7 @@ public class Session : MonoBehaviour
 
     private void HandlePacket(Span<byte> pBuffer, int pLen, ePacketID pID)
     {
-        Debug.Log("HandlePacket called");
+        Debug.Log("ePacketID: " + pID);
         byte[] byteBuffer = pBuffer.ToArray();
         switch (pID)
         {
@@ -132,7 +132,6 @@ public class Session : MonoBehaviour
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
     {
-        Debug.Log("Enter Room called");
         int headerSize = sizeof(PacketHeader);
         List<Protocol.P_Player> players = new List<Protocol.P_Player>();
         Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
