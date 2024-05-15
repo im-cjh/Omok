@@ -34,6 +34,7 @@ public class Session : MonoBehaviour
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent; 
     public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
+    public event Action<Protocol.P_Player> quitRoomRecvEvent;
     public event Action<ChatStruct> chatRoomRecvEvent;
 
     public User _user;
@@ -106,9 +107,17 @@ public class Session : MonoBehaviour
 
     }
 
-    private void Handle_QuitRoomMessage(byte[] pByteBuffer, int pLen)
+    unsafe private void Handle_QuitRoomMessage(byte[] pBuffer, int pLen)
     {
-        throw new NotImplementedException();
+        Debug.Log("Handle_QuitRoomMessage");
+        int headerSize = sizeof(PacketHeader);
+
+        Protocol.P_Player pkt = Protocol.P_Player.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            quitRoomRecvEvent(pkt);
+        });
     }
 
     unsafe private void Handle_ChatMessage(byte[] pBuffer, int pLen)
@@ -144,18 +153,7 @@ public class Session : MonoBehaviour
         
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            //Debug.Log(players.Count);
-
-            if (players != null)
-            {
-                Debug.Log("Players.count = " + players.Count);
-                
                enterRoomRecvEvent(players);
-            }
-            else
-            {
-                
-            }
         });
 
     }
@@ -171,12 +169,6 @@ public class Session : MonoBehaviour
             contentRecvEvent(content);
         });
     }
-
-    //public void RecvRoomFromServer(List<Room> rooms)
-    //{
-    //    // 받아온 Room 데이터를 이벤트로 전달
-    //    roomRecvEvent.Invoke(rooms);
-    //}
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
@@ -215,6 +207,7 @@ public class Session : MonoBehaviour
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
                     {
+                        Debug.Log("me");
                         return;
                     }
                     HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);

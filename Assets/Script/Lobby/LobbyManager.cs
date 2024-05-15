@@ -56,6 +56,13 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    public void OnSceneChanged()
+    {
+        Debug.Log("OnSceneChanged");
+        GameObject contentGO = GameObject.Find("content");
+        _transform = contentGO.transform;
+    }
+
     public void FastGameClick()
     {
 

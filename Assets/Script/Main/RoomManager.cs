@@ -1,3 +1,4 @@
+using Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,21 +12,24 @@ public class RoomManager : MonoBehaviour
     Text roomName;
 
     [SerializeField]
-    RoomUser[] users;
+    RoomUser[] userInfos;
 
+    private List<Protocol.P_Player> _players;
     // Start is called before the first frame update
     void Start()
     {
+        _players = new List<Protocol.P_Player>(2);  
         try
         {
             Session.Instance.enterRoomRecvEvent += OnPlayerEntered;
+            Session.Instance.quitRoomRecvEvent += OnPlayerQuit;
 
-            users = new RoomUser[2];
+            userInfos = new RoomUser[2];
             GameObject tmp = gameObject.transform.GetChild(1).gameObject;
-            users[0] = tmp.GetComponent<RoomUser>();
+            userInfos[0] = tmp.GetComponent<RoomUser>();
             
             tmp = gameObject.transform.GetChild(2).gameObject;
-            users[1] = tmp.GetComponent<RoomUser>();
+            userInfos[1] = tmp.GetComponent<RoomUser>();
 
             roomName.text = LobbyManager.Instance.GetSelectedRoom().roomName;
         }
@@ -41,30 +45,38 @@ public class RoomManager : MonoBehaviour
         
     }
 
-    public void QuitRoom(User user)
+    public void QuitRoom()
     {
-        //_session
+        Protocol.C2SQuitRoom pkt = new Protocol.C2SQuitRoom();
+        pkt.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
+        pkt.UserID = User.Instance.id;
+
+        byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.QUIT_ROOM_MESSAGE);
+        Session.Instance.Send(sendBuffer);
+
+        SceneChanger.ChangeLobbyScene();
     }
 
     public void OnPlayerQuit(Protocol.P_Player pPlayer)
     {
-        throw new NotImplementedException();
+        Debug.Log("OnPlayerQuit");
+        _players.Remove(pPlayer);
+        UpdateUserInfo();
+        //throw new NotImplementedException();
     }
 
     public void OnPlayerEntered(List<Protocol.P_Player> pPlayers)
     {
         //Debug.Log(pPlayers.Count);
+        _players = pPlayers;
+        UpdateUserInfo();
+    }
 
-        for(int i = 0; i < pPlayers.Count; i++) 
+    private void UpdateUserInfo()
+    {
+        for (int i = 0; i < _players.Count; i+=1)
         {
-            if (pPlayers[i].UserName == null)
-            {
-                Debug.Log("pPlayers[i].UserName == null");
-            }
-            else
-            {
-                users[i].SetInfo(pPlayers[i].UserName);
-            }
+            userInfos[i].SetInfo(_players[i].UserName);
         }
     }
 }
