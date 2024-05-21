@@ -1153,6 +1153,7 @@ GameObject:
   - component: {fileID: 848230649}
   - component: {fileID: 848230648}
   - component: {fileID: 848230647}
+  - component: {fileID: 848230650}
   m_Layer: 5
   m_Name: EnterBtn
   m_TagString: Untagged
@@ -1224,9 +1225,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1244429099}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
-        m_MethodName: EnterRoom
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1274,6 +1275,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 848230645}
   m_CullTransparentMesh: 1
+--- !u!114 &848230650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848230645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0d5f0250002ba441bb53b6ebdb050f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &890528574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1618,6 +1631,7 @@ GameObject:
   - component: {fileID: 1105394820}
   - component: {fileID: 1105394819}
   - component: {fileID: 1105394818}
+  - component: {fileID: 1105394821}
   m_Layer: 5
   m_Name: ReloadBtn
   m_TagString: Untagged
@@ -1689,7 +1703,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1244429099}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyManager, Assembly-CSharp
         m_MethodName: ReloadRoom
         m_Mode: 1
@@ -1739,6 +1753,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105394816}
   m_CullTransparentMesh: 1
+--- !u!114 &1105394821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105394816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c40944bbd8dc4f64c920407fd5186adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1147019988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,97 +1840,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147019988}
   m_CullTransparentMesh: 1
---- !u!1 &1244429098
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1244429100}
-  - component: {fileID: 1244429099}
-  m_Layer: 0
-  m_Name: Lobby Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1244429099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1244429098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a21decab2f72f0145be10f2b60999396, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollView: {fileID: 2001048431}
-  _transform: {fileID: 1708662700}
-  textChatPrefab: {fileID: 6509801991507731491, guid: 71ea1aa696060e048a513dd4eef59744, type: 3}
---- !u!4 &1244429100
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1244429098}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.3385575, y: -2.2386904, z: 90}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1308141884
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1308141886}
-  - component: {fileID: 1308141885}
-  m_Layer: 0
-  m_Name: Scene Changer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1308141885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1308141884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84c01dac75cdda14ea17906d1075ea02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1308141886
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1308141884}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1319362522
 GameObject:
   m_ObjectHideFlags: 0
@@ -2781,6 +2716,7 @@ GameObject:
   - component: {fileID: 2001048433}
   - component: {fileID: 2001048432}
   - component: {fileID: 2001048431}
+  - component: {fileID: 2001048434}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -2877,6 +2813,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2001048429}
   m_CullTransparentMesh: 1
+--- !u!114 &2001048434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001048429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9938707a54fa35488373f8c3aa93411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2086659153
 GameObject:
   m_ObjectHideFlags: 0
@@ -3067,5 +3015,3 @@ SceneRoots:
   - {fileID: 554080764}
   - {fileID: 2086659157}
   - {fileID: 350488720}
-  - {fileID: 1308141886}
-  - {fileID: 1244429100}

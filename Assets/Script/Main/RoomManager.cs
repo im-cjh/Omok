@@ -54,6 +54,14 @@ public class RoomManager : MonoBehaviour
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.QUIT_ROOM_MESSAGE);
         Session.Instance.Send(sendBuffer);
 
+        Protocol.C2SChatRoom pkt2 = new Protocol.C2SChatRoom();
+        pkt2.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
+        pkt2.SenderName = "Someone";
+        pkt2.Content = "Quit Room";
+
+        sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
+        Session.Instance.Send(sendBuffer);
+
         SceneChanger.ChangeLobbyScene();
     }
 

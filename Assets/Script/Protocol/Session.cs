@@ -81,7 +81,6 @@ public class Session : MonoBehaviour
 
     private void HandlePacket(Span<byte> pBuffer, int pLen, ePacketID pID)
     {
-        Debug.Log("ePacketID: " + pID);
         byte[] byteBuffer = pBuffer.ToArray();
         switch (pID)
         {
@@ -122,7 +121,6 @@ public class Session : MonoBehaviour
 
     unsafe private void Handle_ChatMessage(byte[] pBuffer, int pLen)
     {
-        Debug.Log("handle chat meesage");
         int headerSize = sizeof(PacketHeader);
         Protocol.S2CChatRoom content = Protocol.S2CChatRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 

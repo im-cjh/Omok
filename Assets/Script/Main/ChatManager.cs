@@ -43,15 +43,13 @@ public class ChatManager : MonoBehaviour
             Session.Instance.Send(sendBuffer);
             //대화 입력창에 있는 내용 초기화 
             inputField.text = "";
-            Debug.Log("sibal");
+
         }
 
     }
 
     public void UpdateChat(ChatStruct pChat)
     {
-        Debug.Log("UpdateChat");
-        Debug.Log(pChat.content);
         if (pChat.content.Equals(""))
         {
             Debug.Log("UpdateChat2");
@@ -76,8 +74,12 @@ public class ChatManager : MonoBehaviour
             {
                 //대화 입력창의 포커스를 활성화 
                 inputField.ActivateInputField();
-                Debug.Log("sibal2");
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Session.Instance.chatRoomRecvEvent -= UpdateChat;
     }
 }

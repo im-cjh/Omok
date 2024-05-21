@@ -6,19 +6,19 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static System.Collections.Specialized.BitVector32;
 
 public class LobbyManager : MonoBehaviour
 {
     private static LobbyManager _instance;
 
-    public ScrollRect scrollView;
+    private ScrollRect _scrollView;
 
-    [SerializeField]
     private Transform _transform;
 
-    [SerializeField]
-    private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
+    private GameObject roomPrefab; //대화를 출력하는 Text UI 프리팹
+
     private Room _selectedRoom;
     private Dictionary<int, Room> _rooms;
 
@@ -33,7 +33,7 @@ public class LobbyManager : MonoBehaviour
                 if (_instance == null)
                 {
                     // RoomManager가 없는 경우 새로 생성
-                    GameObject obj = new GameObject("LobbyManager");
+                    GameObject obj = new GameObject("Lobby Manager");
                     _instance = obj.AddComponent<LobbyManager>();
                 }
             }
@@ -46,7 +46,7 @@ public class LobbyManager : MonoBehaviour
         try
         {
             //_session = FindObjectOfType<Session>();
-            Session.Instance.roomRecvEvent += OnRecvRoom;
+            Session.Instance.roomRecvEvent += Instance.OnRecvRoom;
             ReloadRoom();
             DontDestroyOnLoad(this);
         }
@@ -56,11 +56,13 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    public void OnSceneChanged()
+    public void OnSceneChanged(ScrollRect pScrollView)
     {
-        Debug.Log("OnSceneChanged");
-        GameObject contentGO = GameObject.Find("content");
-        _transform = contentGO.transform;
+        _transform = pScrollView.viewport.GetChild(0);
+        roomPrefab = Resources.Load<GameObject>("Room");
+        _scrollView = pScrollView;
+
+        ReloadRoom();
     }
 
     public void FastGameClick()
@@ -91,8 +93,8 @@ public class LobbyManager : MonoBehaviour
 
     public void OnRecvRoom(Dictionary<int, Room> rooms)
     {
-        
         _rooms = rooms;
+        
         foreach (Transform child in _transform)
         {
             Destroy(child.gameObject);
@@ -102,17 +104,18 @@ public class LobbyManager : MonoBehaviour
         {
             foreach(var room in _rooms)
             {
-                GameObject roomObject = Instantiate(textChatPrefab, _transform);
+                GameObject roomObject = Instantiate(roomPrefab, _transform);
                 RoomUI roomUI = roomObject.GetComponent<RoomUI>();
                 roomUI.SetRoomInfo(room.Value);
             }
             
             Canvas.ForceUpdateCanvases();
-            scrollView.verticalNormalizedPosition = 0f;
+            _scrollView.verticalNormalizedPosition = 0f;
         }
         catch(Exception e) 
         {
-            Debug.Log("OnRecvRoom's error Called");
+            Debug.Log("OnRecvRoom's error Called" + e.Message);
+            
             return;
         }
     }
@@ -138,13 +141,13 @@ public class LobbyManager : MonoBehaviour
     public void UpdateChat()
     {
         //대화 내용 출력을 위해 Text UI 생성 
-        GameObject clone = Instantiate(textChatPrefab, _transform);
+        GameObject clone = Instantiate(roomPrefab, _transform);
 
         //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
         //clone.GetComponent<TextMeshProUGUI>().text = $"{ID}: {inputField.text}";
 
         Canvas.ForceUpdateCanvases();
-        scrollView.verticalNormalizedPosition = 0f;
+        _scrollView.verticalNormalizedPosition = 0f;
     }
 
     public Room GetSelectedRoom()
