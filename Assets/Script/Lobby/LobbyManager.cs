@@ -65,9 +65,13 @@ public class LobbyManager : MonoBehaviour
         ReloadRoom();
     }
 
-    public void FastGameClick()
+    public void OnClickedFastGame()
     {
-
+        Task.Run(async () =>
+        {
+            byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
+            await Session.Instance.Send(sendBuffer);
+        });
     }
 
     public void EnterRoom()
@@ -81,7 +85,11 @@ public class LobbyManager : MonoBehaviour
         pkt.RoomID = _selectedRoom.roomId;
         pkt.UserID = Session.Instance._user.id;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_ROOM);
-        Session.Instance.Send(sendBuffer);
+
+        Task.Run(async () =>
+        {
+            await Session.Instance.Send(sendBuffer);
+        });
 
     }
 
@@ -129,8 +137,6 @@ public class LobbyManager : MonoBehaviour
 
     public void ReloadRoom()
     {
-        //byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);
-        //_session.Send(sendBuffer);
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);

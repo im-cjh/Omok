@@ -12,6 +12,7 @@ public enum ePacketID : UInt16
     LOGIN_SUCCESS = 4,
     WINNER_MESSAGE = 5,
     QUIT_ROOM_MESSAGE = 6,
+    MATCHMAKIING_MESSAGE = 7,
 }
 
 [Serializable]
