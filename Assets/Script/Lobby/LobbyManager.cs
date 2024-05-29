@@ -74,7 +74,12 @@ public class LobbyManager : MonoBehaviour
         });
     }
 
-    public void EnterRoom()
+    public void EnterFastRoom()
+    {
+        SceneChanger.ChangeGameScene();
+    }
+
+    public void EnterCustomRoom()
     {
         if (_selectedRoom == null)
             return;

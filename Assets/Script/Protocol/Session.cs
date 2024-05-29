@@ -102,8 +102,22 @@ public class Session : MonoBehaviour
             case ePacketID.QUIT_ROOM_MESSAGE:
                 Handle_QuitRoomMessage(byteBuffer, pLen);
                 break;
+            case ePacketID.MATCHMAKIING_MESSAGE:
+                Handle_MatchmakingMessage(byteBuffer, pLen);
+                break;
         }
 
+    }
+
+    unsafe private void Handle_MatchmakingMessage(byte[] pBuffer, int pLen)
+    {
+        int headerSize = sizeof(PacketHeader);
+        
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            LobbyManager.Instance.EnterFastRoom();
+        });
+        //Protocol.P_Player pkt = Protocol.P_Player.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
     }
 
     unsafe private void Handle_QuitRoomMessage(byte[] pBuffer, int pLen)
@@ -139,6 +153,7 @@ public class Session : MonoBehaviour
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
     {
+        Debug.Log("asd");
         int headerSize = sizeof(PacketHeader);
         List<Protocol.P_Player> players = new List<Protocol.P_Player>();
         Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);

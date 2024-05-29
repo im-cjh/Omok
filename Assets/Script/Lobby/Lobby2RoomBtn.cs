@@ -12,6 +12,6 @@ public class Lobby2RoomBtn : MonoBehaviour
     void Start()
     {
         btn = GetComponent<Button>();
-        btn.onClick.AddListener(() => LobbyManager.Instance.EnterRoom());
+        btn.onClick.AddListener(() => LobbyManager.Instance.EnterCustomRoom());
     }
 }
