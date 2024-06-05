@@ -27,13 +27,6 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     private TMP_InputField pwdField;
 
-    private Session _session;
-
-    private void Start()
-    {
-        _session = FindObjectOfType<Session>();
-    }
-
     private async Task LoginAsync()
     {
         // HTTP POST 요청을 보낼 엔드포인트 URL
@@ -62,14 +55,14 @@ public class LoginManager : MonoBehaviour
                     
                     //성공
                     //return ret;
-                    await _session.Connect();
+                    await LobbySession.Instance.Connect("127.0.0.1", 7777);
 
                     Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess();
                     pkt.UserName = User.Instance.userName;
                     pkt.UserID = User.Instance.id;
 
                     byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
-                    await _session.Send(sendBuffer);
+                    await LobbySession.Instance.Send(sendBuffer);
 
                     SceneChanger.ChangeLobbyScene();
                 }

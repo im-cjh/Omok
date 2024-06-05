@@ -21,8 +21,8 @@ public class RoomManager : MonoBehaviour
         _players = new List<Protocol.P_Player>(2);  
         try
         {
-            Session.Instance.enterRoomRecvEvent += OnPlayerEntered;
-            Session.Instance.quitRoomRecvEvent += OnPlayerQuit;
+            LobbySession.Instance.enterRoomRecvEvent += OnPlayerEntered;
+            LobbySession.Instance.quitRoomRecvEvent += OnPlayerQuit;
 
             userInfos = new RoomUser[2];
             GameObject tmp = gameObject.transform.GetChild(1).gameObject;
@@ -52,7 +52,7 @@ public class RoomManager : MonoBehaviour
         pkt.UserID = User.Instance.id;
 
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.QUIT_ROOM_MESSAGE);
-        Session.Instance.Send(sendBuffer);
+        LobbySession.Instance.Send(sendBuffer);
 
         Protocol.C2SChatRoom pkt2 = new Protocol.C2SChatRoom();
         pkt2.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
@@ -60,7 +60,7 @@ public class RoomManager : MonoBehaviour
         pkt2.Content = "Quit Room";
 
         sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
-        Session.Instance.Send(sendBuffer);
+        LobbySession.Instance.Send(sendBuffer);
 
         SceneChanger.ChangeLobbyScene();
     }

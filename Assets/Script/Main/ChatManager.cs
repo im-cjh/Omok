@@ -27,7 +27,7 @@ public class ChatManager : MonoBehaviour
     private void Start()
     {
         _name = User.Instance.userName;
-        Session.Instance.chatRoomRecvEvent += UpdateChat;
+        LobbySession.Instance.chatRoomRecvEvent += UpdateChat;
     }
     public void OnEndEditEventMethod()
     {
@@ -40,7 +40,7 @@ public class ChatManager : MonoBehaviour
             pkt.Content = inputField.text;
 
             byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
-            Session.Instance.Send(sendBuffer);
+            LobbySession.Instance.Send(sendBuffer);
             //대화 입력창에 있는 내용 초기화 
             inputField.text = "";
 
@@ -80,6 +80,6 @@ public class ChatManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Session.Instance.chatRoomRecvEvent -= UpdateChat;
+        LobbySession.Instance.chatRoomRecvEvent -= UpdateChat;
     }
 }

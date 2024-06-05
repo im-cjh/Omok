@@ -29,8 +29,8 @@ public class ClickHandler : MonoBehaviour
     private void Start()
     {
         _stones = new eStone[19, 19];
-        
-        Session.Instance.contentRecvEvent += OnRecvContent;
+
+        LobbySession.Instance.contentRecvEvent += OnRecvContent;
     }
 
     private void OnRecvContent(P_GameContent pContent)
@@ -109,7 +109,7 @@ public class ClickHandler : MonoBehaviour
         pkt.StoneColor = (int)pColor;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
-        Session.Instance.Send(sendBuffer);
+        LobbySession.Instance.Send(sendBuffer);
 
         //서버에 position전송
         //Task.Run(async () =>

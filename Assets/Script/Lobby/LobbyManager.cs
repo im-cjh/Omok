@@ -45,8 +45,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            //_session = FindObjectOfType<Session>();
-            Session.Instance.roomRecvEvent += Instance.OnRecvRoom;
+            LobbySession.Instance.roomRecvEvent += Instance.OnRecvRoom;
             ReloadRoom();
             DontDestroyOnLoad(this);
         }
@@ -70,7 +69,7 @@ public class LobbyManager : MonoBehaviour
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
-            await Session.Instance.Send(sendBuffer);
+            await LobbySession.Instance.Send(sendBuffer);
         });
     }
 
@@ -88,12 +87,12 @@ public class LobbyManager : MonoBehaviour
 
         Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
         pkt.RoomID = _selectedRoom.roomId;
-        pkt.UserID = Session.Instance._user.id;
+        pkt.UserID = LobbySession.Instance._user.id;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_ROOM);
 
         Task.Run(async () =>
         {
-            await Session.Instance.Send(sendBuffer);
+            await LobbySession.Instance.Send(sendBuffer);
         });
 
     }
@@ -145,7 +144,7 @@ public class LobbyManager : MonoBehaviour
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.ROOMS_MESSAGE);
-            await Session.Instance.Send(sendBuffer);
+            await LobbySession.Instance.Send(sendBuffer);
         });
     }
 
