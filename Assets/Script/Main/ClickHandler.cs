@@ -31,6 +31,7 @@ public class ClickHandler : MonoBehaviour
         _stones = new eStone[19, 19];
 
         LobbySession.Instance.contentRecvEvent += OnRecvContent;
+        BattleSession.Instance.contentRecvEvent += OnRecvContent;
     }
 
     private void OnRecvContent(P_GameContent pContent)
@@ -102,14 +103,14 @@ public class ClickHandler : MonoBehaviour
         PlaceStone(pPosition, pColor);
 
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
-        pkt.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
+        pkt.RoomID = LobbyManager.Instance.RoomID;
         Debug.Log("RoomID: " + pkt.RoomID);
         pkt.YPos = pPosition.y;
         pkt.XPos = pPosition.x;
         pkt.StoneColor = (int)pColor;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
-        LobbySession.Instance.Send(sendBuffer);
+        BattleSession.Instance.Send(sendBuffer);
 
         //서버에 position전송
         //Task.Run(async () =>

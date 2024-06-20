@@ -55,7 +55,7 @@ public class LoginManager : MonoBehaviour
                     
                     //¼º°ø
                     //return ret;
-                    await LobbySession.Instance.Connect("127.0.0.1", 7777);
+                    LobbySession.Instance.Connect("127.0.0.1", 7777);
 
                     Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess();
                     pkt.UserName = User.Instance.userName;

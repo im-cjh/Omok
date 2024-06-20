@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -18,10 +19,16 @@ using UnityEngine.UIElements;
 
 public class BattleSession : Session
 {
-    private static BattleSession _instance;
+    public static BattleSession _instance;
     public event Action<ChatStruct> chatRoomRecvEvent;
     public event Action<Protocol.P_Player> quitRoomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
+    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
+
+    public BattleSession tmp()
+    {
+        return _instance; 
+    }    
     public static BattleSession Instance
     {
         get
@@ -30,19 +37,21 @@ public class BattleSession : Session
             {
                 // Scene에서 RoomManager를 찾아 인스턴스화
                 _instance = FindObjectOfType<BattleSession>();
-                if (_instance == null)
-                {
-                    // RoomManager가 없는 경우 새로 생성
-                    GameObject obj = new GameObject("BattleSession");
-                    _instance = obj.AddComponent<BattleSession>();
-                }
+                //if (_instance == null)
+                //{
+                //    // RoomManager가 없는 경우 새로 생성
+                //    GameObject obj = new GameObject("lobbySession");
+                //    _instance = obj.AddComponent<LobbySession>();
+                //}
             }
             return _instance;
         }
     }
 
-    // Start is called before the first frame update
-    private void Start()
+
+
+// Start is called before the first frame update
+private void Start()
     {
         base.Start();
 
@@ -52,6 +61,22 @@ public class BattleSession : Session
     void Update()
     {
 
+    }
+
+    public async Task RequestEnterFastRoom(int roomId)
+    {
+        Debug.Log("RequestEnterFastRoom");
+        Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
+        pkt.RoomID = roomId;
+        pkt.UserID = LobbySession.Instance._user.id;
+
+        byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_FAST_ROOM);
+
+        UnityMainThreadDispatcher.Instance().Enqueue(async () =>
+        {
+            await Send(sendBuffer);
+        });
+        
     }
 
     protected override void HandlePacket(Span<byte> pBuffer, int pLen, ePacketID pID)
@@ -65,9 +90,9 @@ public class BattleSession : Session
             case ePacketID.CONTENT_MESSAGE:
                 Handle_ContentMessage(byteBuffer, pLen);
                 break;
-            //case ePacketID.ENTER_ROOM:
-            //    Handle_EnterRoomMessage(byteBuffer, pLen);
-            //    break;
+            case ePacketID.ENTER_ROOM:
+                Handle_EnterRoomMessage(byteBuffer, pLen);
+                break;
             case ePacketID.WINNER_MESSAGE:
                 Handle_WinnerMessage(byteBuffer, pLen);
                 break;
@@ -79,6 +104,26 @@ public class BattleSession : Session
                 break;
         }
 
+    }
+
+    unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
+    {
+        Debug.Log("Handle_EnterRoomMessage");
+        int headerSize = sizeof(PacketHeader);
+        List<Protocol.P_Player> players = new List<Protocol.P_Player>();
+        Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+
+        for (int i = 0; i < pkt.Players.Count; i += 1)
+        {
+            Protocol.P_Player p = pkt.Players[i];
+            players.Add(p);
+        }
+        Debug.Log("players.count: "+players.Count);
+        Debug.Log(enterRoomRecvEvent);
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            enterRoomRecvEvent(players);
+        });
     }
 
     unsafe private void Handle_MatchmakingMessage(byte[] pBuffer, int pLen)
@@ -147,7 +192,6 @@ public class BattleSession : Session
         int headerSize = sizeof(PacketHeader);
         Protocol.P_GameContent content = Protocol.P_GameContent.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
-        //ReceiveRoomFromServer(room);
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             contentRecvEvent(content);

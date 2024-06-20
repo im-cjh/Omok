@@ -77,28 +77,39 @@ public class LobbySession : Session
                 Handle_QuitRoomMessage(byteBuffer, pLen);
                 break;
             case ePacketID.MATCHMAKIING_MESSAGE:
-                Handle_MatchmakingMessage(byteBuffer, pLen);
+                Handle_MatchmakingMessageAsync(byteBuffer, pLen);
                 break;
         }
-
     }
 
-    unsafe private void Handle_MatchmakingMessage(byte[] pBuffer, int pLen)
+    private void Handle_MatchmakingMessageAsync(byte[] pBuffer, int pLen)
     {
-        int headerSize = sizeof(PacketHeader);
-        Protocol.S2CBattleServer pkt = Protocol.S2CBattleServer.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
-        BattleSession.Instance.Connect();
-
-        //UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        //{
-        //    LobbyManager.Instance.EnterFastRoom();
-        //});
+        try
+        {
+            int headerSize = Marshal.SizeOf<PacketHeader>();
+            Debug.Log("Handle_MatchmakingMessage");
+            Protocol.S2CBattleServerAddr pkt = Protocol.S2CBattleServerAddr.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+            Debug.Log(pkt.BattleServerIp + " : " + pkt.Port + " : " + pkt.RoomID);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                LobbyManager.Instance.RoomID = pkt.RoomID;
+                BattleSession.Instance.Connect(pkt.BattleServerIp, pkt.Port);
+                BattleSession.Instance.RequestEnterFastRoom(pkt.RoomID);
+            });
+            
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Exception in Handle_MatchmakingMessageAsync: " + e.Message);
+        }
     }
+
 
     unsafe private void Handle_QuitRoomMessage(byte[] pBuffer, int pLen)
     {
         Debug.Log("Handle_QuitRoomMessage");
         int headerSize = sizeof(PacketHeader);
+        
 
         Protocol.P_Player pkt = Protocol.P_Player.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
@@ -144,7 +155,6 @@ public class LobbySession : Session
         {
             enterRoomRecvEvent(players);
         });
-
     }
 
     unsafe private void Handle_ContentMessage(byte[] pBuffer, int pLen)

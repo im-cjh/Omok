@@ -28,6 +28,7 @@ public class ChatManager : MonoBehaviour
     {
         _name = User.Instance.userName;
         LobbySession.Instance.chatRoomRecvEvent += UpdateChat;
+        BattleSession.Instance.chatRoomRecvEvent += UpdateChat;
     }
     public void OnEndEditEventMethod()
     {
@@ -35,12 +36,12 @@ public class ChatManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
             Protocol.C2SChatRoom pkt = new Protocol.C2SChatRoom();
-            pkt.RoomID = LobbyManager.Instance.GetSelectedRoom().roomId;
+            pkt.RoomID = LobbyManager.Instance.RoomID;
             pkt.SenderName = _name;
             pkt.Content = inputField.text;
 
             byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CHAT_MESSAGE);
-            LobbySession.Instance.Send(sendBuffer);
+            BattleSession.Instance.Send(sendBuffer);
             //대화 입력창에 있는 내용 초기화 
             inputField.text = "";
 
@@ -81,5 +82,6 @@ public class ChatManager : MonoBehaviour
     private void OnDestroy()
     {
         LobbySession.Instance.chatRoomRecvEvent -= UpdateChat;
+        BattleSession.Instance.chatRoomRecvEvent -= UpdateChat;
     }
 }

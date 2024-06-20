@@ -20,7 +20,9 @@ public class LobbyManager : MonoBehaviour
     private GameObject roomPrefab; //대화를 출력하는 Text UI 프리팹
 
     private Room _selectedRoom;
+
     private Dictionary<int, Room> _rooms;
+    public int RoomID;
 
     public static LobbyManager Instance
     {
@@ -66,6 +68,7 @@ public class LobbyManager : MonoBehaviour
 
     public void OnClickedFastGame()
     {
+       
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
@@ -75,7 +78,7 @@ public class LobbyManager : MonoBehaviour
 
     public void EnterFastRoom()
     {
-        SceneChanger.ChangeGameScene();
+        //SceneChanger.ChangeGameScene();
     }
 
     public void EnterCustomRoom()

@@ -34,8 +34,8 @@ public abstract class Session : MonoBehaviour
     protected byte[] _recvBuffer = new byte[1024];
 
     private bool _isConnected = false;
-    private NetworkStream _stream;
-    private TcpClient _client = new TcpClient();
+    protected NetworkStream _stream;
+    protected TcpClient _client = new TcpClient();
 
     // Start is called before the first frame update
     protected void Start()
@@ -82,25 +82,51 @@ public abstract class Session : MonoBehaviour
         }
     }
 
-    public async Task Connect(string pAddr, int pPort)
+    public void Connect(string pIP, int pPort)
     {
         try
         {
-            await _client.ConnectAsync(pAddr, pPort);
+            _client.Connect(pIP, pPort);
             
             _stream = _client.GetStream();
-            Console.WriteLine("Connected to server!");
+            Debug.Log("Connected to server!");
+
             _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Failed to connect: " + ex.Message);
+            Debug.Log("Failed to connect: " + ex.Message);
             throw ex;
         }
     }
 
-    public async Task Send(byte[] pSendBuffer)
+    public async Task Send(byte[] sendBuffer)
     {
-        await _stream.WriteAsync(pSendBuffer, 0, pSendBuffer.Length);
+        if (sendBuffer == null || sendBuffer.Length == 0)
+        {
+            Debug.Log("Send buffer is null or empty");
+            return;
+        }
+
+        if (_stream == null)
+        {
+            Debug.Log("networkStream is null");
+            return;
+        }
+
+        
+
+        // 실제 네트워크 전송 코드
+        try
+        {
+            // 네트워크 스트림을 통해 데이터 전송
+            await _stream.WriteAsync(sendBuffer, 0, sendBuffer.Length);
+            
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Exception in Send: " + e.Message);
+        }
     }
+
 }

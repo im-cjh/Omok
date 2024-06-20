@@ -2,6 +2,7 @@ using Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
@@ -16,13 +17,23 @@ public class RoomManager : MonoBehaviour
 
     private List<Protocol.P_Player> _players;
     // Start is called before the first frame update
+
+   
+
+    private void Awake()
+    {
+        LobbySession.Instance.enterRoomRecvEvent += OnPlayerEntered;
+        LobbySession.Instance.quitRoomRecvEvent += OnPlayerQuit;
+
+        BattleSession.Instance.enterRoomRecvEvent += OnPlayerEntered;
+        BattleSession.Instance.quitRoomRecvEvent += OnPlayerQuit;
+    }
     void Start()
     {
         _players = new List<Protocol.P_Player>(2);  
         try
         {
-            LobbySession.Instance.enterRoomRecvEvent += OnPlayerEntered;
-            LobbySession.Instance.quitRoomRecvEvent += OnPlayerQuit;
+        
 
             userInfos = new RoomUser[2];
             GameObject tmp = gameObject.transform.GetChild(1).gameObject;
@@ -77,7 +88,8 @@ public class RoomManager : MonoBehaviour
     {
         //Debug.Log(pPlayers.Count);
         _players = pPlayers;
-        UpdateUserInfo();
+        //UpdateUserInfo();
+        SceneChanger.ChangeGameScene();
     }
 
     private void UpdateUserInfo()
