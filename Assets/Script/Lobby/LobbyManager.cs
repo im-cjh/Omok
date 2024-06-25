@@ -68,7 +68,7 @@ public class LobbyManager : MonoBehaviour
 
     public void OnClickedFastGame()
     {
-       
+
         Task.Run(async () =>
         {
             byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
@@ -103,7 +103,16 @@ public class LobbyManager : MonoBehaviour
     public void OnClickedRoom(Room pRoom)
     {
         _selectedRoom = pRoom;
-        
+
+    }
+
+    public void OnClickedMakeRoom(Room pRoom)
+    {
+        Debug.Log("OnClickedMakeRoom");
+
+        Protocol.C2SMakeRoom pkt = new Protocol.C2SMakeRoom();
+        //pkt.
+        //LobbySession.Instance.Send();
     }
 
     public void OnRecvRoom(Dictionary<int, Room> rooms)

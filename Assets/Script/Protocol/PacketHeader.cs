@@ -16,6 +16,7 @@ public enum ePacketID : UInt16
     MATCHMAKED_MESSAGE = 8,
     ROOM_CREATED_MESSAGE = 9,
     ENTER_FAST_ROOM = 10,
+    MAKE_ROOM_MESSAGE = 11,
 }
 
 [Serializable]
