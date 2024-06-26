@@ -771,7 +771,7 @@ GameObject:
   - component: {fileID: 280497648}
   - component: {fileID: 280497647}
   m_Layer: 5
-  m_Name: ID_input
+  m_Name: email_input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -959,17 +959,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 290060758}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9999359, y: 0.9999359, z: 0.9999359}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 603879060}
-  m_Father: {fileID: 1452475103}
+  m_Father: {fileID: 675680305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -156}
+  m_AnchoredPosition: {x: -19.999998, y: -129.17627}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &290060760
@@ -2267,6 +2267,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1452475103}
+  - {fileID: 290060759}
   - {fileID: 560182632}
   m_Father: {fileID: 1287194491}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2636,11 +2637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254bcdf45ff5ae34fb4815a885e89356, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SignInID_text: {fileID: 0}
-  SignInPwd_text: {fileID: 0}
-  SignInEmailField: {fileID: 0}
-  SignInPwdField: {fileID: 0}
-  SignUpEmailField: {fileID: 0}
+  SignUpEmailField: {fileID: 1351905491}
   SignUpPwdField: {fileID: 0}
   SignUpNameField: {fileID: 0}
 --- !u!4 &851082428
@@ -3028,8 +3025,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 14, y: 183}
-  m_SizeDelta: {x: -558.8, y: -447.1}
+  m_AnchoredPosition: {x: 19, y: 169.725}
+  m_SizeDelta: {x: -339.7, y: -420.55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &946286661
 MonoBehaviour:
@@ -3408,6 +3405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messagePanel: {fileID: 946286659}
+  signUpPanel: {fileID: 675680304}
   messageText: {fileID: 1416273544}
 --- !u!4 &1223614639
 Transform:
@@ -3436,7 +3434,7 @@ GameObject:
   - component: {fileID: 1233308389}
   - component: {fileID: 1233308388}
   m_Layer: 5
-  m_Name: ID_text
+  m_Name: email_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4334,7 +4332,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 280, y: 30}
+  m_SizeDelta: {x: 500, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1416273544
 MonoBehaviour:
@@ -4460,7 +4458,6 @@ RectTransform:
   - {fileID: 807022529}
   - {fileID: 1084472845}
   - {fileID: 367256573}
-  - {fileID: 290060759}
   m_Father: {fileID: 675680305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4557,7 +4554,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1521096568}
   m_Layer: 5
-  m_Name: LoginBox
+  m_Name: SignInBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4754,7 +4751,7 @@ GameObject:
   - component: {fileID: 1690618475}
   - component: {fileID: 1690618474}
   m_Layer: 5
-  m_Name: LoginPanel
+  m_Name: SignInPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -19,21 +19,10 @@ public class MessageManager : MonoBehaviour
             {
                 // Scene에서 MessageManager 찾아 인스턴스화
                 _instance = FindObjectOfType<MessageManager>();
-                if (_instance == null)
-                {
-                    // RoomManager가 없는 경우 새로 생성
-                    GameObject obj = new GameObject("MessageManager");
-                    _instance = obj.AddComponent<MessageManager>();
-                }
+
             }
             return _instance;
         }
-    }
-
-    private void Start()
-    {
-        messagePanel = GameObject.Find("Canvas/MessagePanel");
-        messageText = Utilities.FindAndAssign<TMP_Text>("Canvas/MessagePanel/messageText");
     }
 
     public void ShowMessage(string message)
