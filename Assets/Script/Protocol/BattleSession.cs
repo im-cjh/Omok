@@ -16,6 +16,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class BattleSession : Session
 {
@@ -99,11 +100,26 @@ private void Start()
             case ePacketID.QUIT_ROOM_MESSAGE:
                 Handle_QuitRoomMessage(byteBuffer, pLen);
                 break;
-            case ePacketID.MATCHMAKIING_MESSAGE:
+            case ePacketID.MATCHMAKED_MESSAGE:
                 Handle_MatchmakingMessage(byteBuffer, pLen);
+                break;
+            case ePacketID.GAME_START_MESSAGE:
+                Handle_StartGame(byteBuffer, pLen);
                 break;
         }
 
+    }
+
+    unsafe private void Handle_StartGame(byte[] pBuffer, int pLen)
+    {
+        Debug.Log("Handle_StartGame");
+        int headerSize = sizeof(PacketHeader);
+
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            //main씬의 판넬 닫기
+            GameManager.Instance.CloseLoadingPanel();
+        });
     }
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)

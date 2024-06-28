@@ -2640,6 +2640,7 @@ MonoBehaviour:
   SignUpEmailField: {fileID: 1351905491}
   SignUpPwdField: {fileID: 0}
   SignUpNameField: {fileID: 0}
+  messageManager: {fileID: 1223614638}
 --- !u!4 &851082428
 Transform:
   m_ObjectHideFlags: 0

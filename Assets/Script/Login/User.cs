@@ -24,6 +24,12 @@ public class User : MonoBehaviour
             {
                 // Scene에서 RoomManager를 찾아 인스턴스화
                 _instance = FindObjectOfType<User>();
+                if (_instance == null)
+                {
+                    // RoomManager가 없는 경우 새로 생성
+                    GameObject obj = new GameObject("user");
+                    _instance = obj.AddComponent<User>();
+                }
             }
             return _instance;
         }

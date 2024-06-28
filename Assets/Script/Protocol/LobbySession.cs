@@ -76,7 +76,7 @@ public class LobbySession : Session
             case ePacketID.QUIT_ROOM_MESSAGE:
                 Handle_QuitRoomMessage(byteBuffer, pLen);
                 break;
-            case ePacketID.MATCHMAKIING_MESSAGE:
+            case ePacketID.MATCHMAKED_MESSAGE:
                 Handle_MatchmakingMessageAsync(byteBuffer, pLen);
                 break;
         }

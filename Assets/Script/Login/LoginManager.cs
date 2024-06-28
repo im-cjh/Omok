@@ -24,6 +24,8 @@ public class LoginManager : MonoBehaviour
     public TMP_InputField SignUpPwdField;
     public TMP_InputField SignUpNameField;
 
+    public MessageManager messageManager;
+
     private void Start()
     {
         SignInID_text = Utilities.FindAndAssign<Text>("Canvas/SignInPanel/SignInBox/email_text");
@@ -34,72 +36,61 @@ public class LoginManager : MonoBehaviour
 
     private async Task SignInAsync()
     {
- 
-        // HTTP POST 요청을 보낼 엔드포인트 URL
         string url = "http://localhost:3000/login";
-        Debug.Log(url);
         string json = JsonConvert.SerializeObject(new { email = SignInEmailField.text, pwd = SignInPwdField.text });
-        Debug.Log(json);
 
-        //HttpClient 인스턴스 생성
-        using (HttpClient client = new HttpClient())
+        try
         {
-            client.Timeout = TimeSpan.FromSeconds(5); // 10초로 시간 제한 설정
-            try
+            using (HttpClient client = new HttpClient())
             {
-                // HTTP POST 요청을 만들고 전송합니다.
+                client.Timeout = TimeSpan.FromSeconds(3); // Timeout 설정
+
                 HttpResponseMessage response = await client.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json"));
-                
-                // 응답 메시지를 확인합니다.
+
                 if (response.IsSuccessStatusCode)
                 {
-                    Debug.Log(response.IsSuccessStatusCode);
-                    var rc = await response.Content.ReadAsStringAsync();
-                    // 성공적으로 요청이 완료되었을 때
                     string jsonString = await response.Content.ReadAsStringAsync();
                     JObject jsonObj = JObject.Parse(jsonString);
 
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    UnityMainThreadDispatcher.Instance().Enqueue(async () =>
                     {
                         User.Instance.userName = jsonObj["name"].ToString();
                         User.Instance.id = Convert.ToInt32(jsonObj["id"].ToString());
-                        Debug.Log("성공");
-                        LobbySession.Instance.Connect("127.0.0.1", 7777);
-                    
+                        Debug.Log("로그인 성공!");
 
+                        // 추가 작업 수행
+                        LobbySession.Instance.Connect("127.0.0.1", 7777);
 
                         Protocol.C2SLoginSuccess pkt = new Protocol.C2SLoginSuccess();
                         pkt.UserName = jsonObj["name"].ToString();
                         pkt.UserID = Convert.ToInt32(jsonObj["id"].ToString());
 
                         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.LOGIN_SUCCESS);
-                        LobbySession.Instance.Send(sendBuffer);
-                        //성공
-
+                        await LobbySession.Instance.Send(sendBuffer);
 
                         SceneChanger.ChangeLobbyScene();
                     });
-
-            }
+                }
                 else
                 {
-                    Debug.Log("실패");
-                    // 요청이 실패한 경우
+                    Debug.LogWarning("로그인 실패: " + response.StatusCode);
                     SignInID_text.text = "이메일 - 유효하지 않은 아이디 또는 비밀번호입니다.";
                     SignInID_text.color = Color.red;
                     SignInPwd_text.text = "비밀번호 - 유효하지 않은 아이디 또는 비밀번호입니다.";
                     SignInPwd_text.color = Color.red;
                 }
             }
-            catch (Exception e)
-            {
-                // 오류 처리
-                MessageManager.Instance.ShowMessage("네트워크를 확인해주세요");
-                MessageManager.Instance.CloseSignUpPanel();
-            }
         }
-        //실패
-        //return null;
+        catch (HttpRequestException ex)
+        {
+            Debug.LogError("HTTP 요청 예외 발생: " + ex.Message);
+            messageManager.ShowMessage("네트워크 연결을 확인해주세요.");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("예외 발생: " + ex.Message);
+            messageManager.ShowMessage("네트워크 연결에 실패했습니다.");
+        }
     }
 
     public async Task SignUpAsync()
@@ -138,8 +129,8 @@ public class LoginManager : MonoBehaviour
                     // 회원가입 성공 메시지를 표시
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
-                        MessageManager.Instance.ShowMessage("회원가입이 완료되었습니다. 로그인 해주세요");
-                        MessageManager.Instance.CloseSignUpPanel();
+                        messageManager.ShowMessage("회원가입이 완료되었습니다. 로그인 해주세요");
+                        messageManager.CloseSignUpPanel();
                     });
                 }
                 else
@@ -159,7 +150,7 @@ public class LoginManager : MonoBehaviour
 
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
-                    MessageManager.Instance.ShowMessage("네트워크를 확인해주세요");
+                    messageManager.ShowMessage("네트워크를 확인해주세요");
                 });
             }
         }
