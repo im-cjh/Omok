@@ -26,28 +26,28 @@ namespace Protocol {
           string.Concat(
             "Cg5Qcm90b2NvbC5wcm90bxIIUHJvdG9jb2wiUQoGUF9Sb29tEg4KBnJvb21J",
             "RBgBIAEoBRIQCghyb29tTmFtZRgCIAEoCRIQCghob3N0TmFtZRgDIAEoCRIT",
-            "CgtudW1fcGxheWVycxgEIAEoBSIcCghQX1BsYXllchIQCgh1c2VyTmFtZRgB",
-            "IAEoCSIuCgtTMkNSb29tTGlzdBIfCgVyb29tcxgBIAMoCzIQLlByb3RvY29s",
-            "LlBfUm9vbSJGCgtDMlNNYWtlUm9vbRIQCghyb29tTmFtZRgBIAEoCRIQCgho",
-            "b3N0TmFtZRgCIAEoCRITCgtudW1fcGxheWVycxgDIAEoBSIuCgxDMlNFbnRl",
-            "clJvb20SDgoGcm9vbUlEGAEgASgFEg4KBnVzZXJJRBgCIAEoBSItCgtDMlNR",
-            "dWl0Um9vbRIOCgZyb29tSUQYASABKAUSDgoGdXNlcklEGAIgASgFIk8KDVBf",
-            "R2FtZUNvbnRlbnQSDgoGcm9vbUlEGAEgASgFEgwKBHlQb3MYAiABKAISDAoE",
-            "eFBvcxgDIAEoAhISCgpzdG9uZUNvbG9yGAQgASgFIjMKD0MyU0xvZ2luU3Vj",
-            "Y2VzcxIQCgh1c2VyTmFtZRgBIAEoCRIOCgZ1c2VySUQYAiABKAUiMwoMUzJD",
-            "RW50ZXJSb29tEiMKB3BsYXllcnMYASADKAsyEi5Qcm90b2NvbC5QX1BsYXll",
-            "ciIfCglTMkNXaW5uZXISEgoKc3RvbmVDb2xvchgBIAEoBSJCCgtDMlNDaGF0",
-            "Um9vbRIOCgZyb29tSUQYASABKAUSDwoHY29udGVudBgCIAEoCRISCgpzZW5k",
-            "ZXJOYW1lGAMgASgJIjIKC1MyQ0NoYXRSb29tEg8KB2NvbnRlbnQYASABKAkS",
-            "EgoKc2VuZGVyTmFtZRgCIAEoCSJLChNTMkNCYXR0bGVTZXJ2ZXJBZGRyEhYK",
-            "DmJhdHRsZVNlcnZlcklwGAEgASgJEgwKBHBvcnQYAiABKAUSDgoGcm9vbUlE",
-            "GAMgASgFIhsKCVMyQ1Jvb21JRBIOCgZyb29tSUQYASABKAUiIAoOUzJDUm9v",
-            "bUNyZWF0ZWQSDgoGcm9vbUlEGAEgASgFYgZwcm90bzM="));
+            "CgtudW1fcGxheWVycxgEIAEoBSIhCg1QX0xvYmJ5UGxheWVyEhAKCHVzZXJO",
+            "YW1lGAEgASgJIi4KC1MyQ1Jvb21MaXN0Eh8KBXJvb21zGAEgAygLMhAuUHJv",
+            "dG9jb2wuUF9Sb29tIkYKC0MyU01ha2VSb29tEhAKCHJvb21OYW1lGAEgASgJ",
+            "EhAKCGhvc3ROYW1lGAIgASgJEhMKC251bV9wbGF5ZXJzGAMgASgFIi4KDEMy",
+            "U0VudGVyUm9vbRIOCgZyb29tSUQYASABKAUSDgoGdXNlcklEGAIgASgFIi0K",
+            "C0MyU1F1aXRSb29tEg4KBnJvb21JRBgBIAEoBRIOCgZ1c2VySUQYAiABKAUi",
+            "TwoNUF9HYW1lQ29udGVudBIOCgZyb29tSUQYASABKAUSDAoEeVBvcxgCIAEo",
+            "AhIMCgR4UG9zGAMgASgCEhIKCnN0b25lQ29sb3IYBCABKAUiMwoPQzJTTG9n",
+            "aW5TdWNjZXNzEhAKCHVzZXJOYW1lGAEgASgJEg4KBnVzZXJJRBgCIAEoBSI4",
+            "CgxTMkNFbnRlclJvb20SKAoHcGxheWVycxgBIAMoCzIXLlByb3RvY29sLlBf",
+            "TG9iYnlQbGF5ZXIiHwoJUzJDV2lubmVyEhIKCnN0b25lQ29sb3IYASABKAUi",
+            "QgoLQzJTQ2hhdFJvb20SDgoGcm9vbUlEGAEgASgFEg8KB2NvbnRlbnQYAiAB",
+            "KAkSEgoKc2VuZGVyTmFtZRgDIAEoCSIyCgtTMkNDaGF0Um9vbRIPCgdjb250",
+            "ZW50GAEgASgJEhIKCnNlbmRlck5hbWUYAiABKAkiSwoTUzJDQmF0dGxlU2Vy",
+            "dmVyQWRkchIWCg5iYXR0bGVTZXJ2ZXJJcBgBIAEoCRIMCgRwb3J0GAIgASgF",
+            "Eg4KBnJvb21JRBgDIAEoBSIbCglTMkNSb29tSUQSDgoGcm9vbUlEGAEgASgF",
+            "IiAKDlMyQ1Jvb21DcmVhdGVkEg4KBnJvb21JRBgBIAEoBWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.P_Room), global::Protocol.P_Room.Parser, new[]{ "RoomID", "RoomName", "HostName", "NumPlayers" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.P_Player), global::Protocol.P_Player.Parser, new[]{ "UserName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.P_LobbyPlayer), global::Protocol.P_LobbyPlayer.Parser, new[]{ "UserName" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.S2CRoomList), global::Protocol.S2CRoomList.Parser, new[]{ "Rooms" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2SMakeRoom), global::Protocol.C2SMakeRoom.Parser, new[]{ "RoomName", "HostName", "NumPlayers" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Protocol.C2SEnterRoom), global::Protocol.C2SEnterRoom.Parser, new[]{ "RoomID", "UserID" }, null, null, null, null),
@@ -367,16 +367,16 @@ namespace Protocol {
 
   }
 
-  public sealed partial class P_Player : pb::IMessage<P_Player>
+  public sealed partial class P_LobbyPlayer : pb::IMessage<P_LobbyPlayer>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<P_Player> _parser = new pb::MessageParser<P_Player>(() => new P_Player());
+    private static readonly pb::MessageParser<P_LobbyPlayer> _parser = new pb::MessageParser<P_LobbyPlayer>(() => new P_LobbyPlayer());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<P_Player> Parser { get { return _parser; } }
+    public static pb::MessageParser<P_LobbyPlayer> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -392,7 +392,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public P_Player() {
+    public P_LobbyPlayer() {
       OnConstruction();
     }
 
@@ -400,15 +400,15 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public P_Player(P_Player other) : this() {
+    public P_LobbyPlayer(P_LobbyPlayer other) : this() {
       userName_ = other.userName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public P_Player Clone() {
-      return new P_Player(this);
+    public P_LobbyPlayer Clone() {
+      return new P_LobbyPlayer(this);
     }
 
     /// <summary>Field number for the "userName" field.</summary>
@@ -426,12 +426,12 @@ namespace Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as P_Player);
+      return Equals(other as P_LobbyPlayer);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(P_Player other) {
+    public bool Equals(P_LobbyPlayer other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -504,7 +504,7 @@ namespace Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(P_Player other) {
+    public void MergeFrom(P_LobbyPlayer other) {
       if (other == null) {
         return;
       }
@@ -2021,12 +2021,12 @@ namespace Protocol {
 
     /// <summary>Field number for the "players" field.</summary>
     public const int PlayersFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Protocol.P_Player> _repeated_players_codec
-        = pb::FieldCodec.ForMessage(10, global::Protocol.P_Player.Parser);
-    private readonly pbc::RepeatedField<global::Protocol.P_Player> players_ = new pbc::RepeatedField<global::Protocol.P_Player>();
+    private static readonly pb::FieldCodec<global::Protocol.P_LobbyPlayer> _repeated_players_codec
+        = pb::FieldCodec.ForMessage(10, global::Protocol.P_LobbyPlayer.Parser);
+    private readonly pbc::RepeatedField<global::Protocol.P_LobbyPlayer> players_ = new pbc::RepeatedField<global::Protocol.P_LobbyPlayer>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Protocol.P_Player> Players {
+    public pbc::RepeatedField<global::Protocol.P_LobbyPlayer> Players {
       get { return players_; }
     }
 

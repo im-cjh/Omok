@@ -15,7 +15,7 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     RoomUser[] userInfos;
 
-    private List<Protocol.P_Player> _players;
+    private List<Protocol.P_LobbyPlayer> _players;
     // Start is called before the first frame update
 
    
@@ -30,7 +30,7 @@ public class RoomManager : MonoBehaviour
     }
     void Start()
     {
-        _players = new List<Protocol.P_Player>(2);  
+        _players = new List<Protocol.P_LobbyPlayer>(2);  
         try
         {
         
@@ -76,7 +76,7 @@ public class RoomManager : MonoBehaviour
         SceneChanger.ChangeLobbyScene();
     }
 
-    public void OnPlayerQuit(Protocol.P_Player pPlayer)
+    public void OnPlayerQuit(Protocol.P_LobbyPlayer pPlayer)
     {
         Debug.Log("OnPlayerQuit");
         _players.Remove(pPlayer);
@@ -84,7 +84,7 @@ public class RoomManager : MonoBehaviour
         //throw new NotImplementedException();
     }
 
-    public void OnPlayerEntered(List<Protocol.P_Player> pPlayers)
+    public void OnPlayerEntered(List<Protocol.P_LobbyPlayer> pPlayers)
     {
         //Debug.Log(pPlayers.Count);
         _players = pPlayers;

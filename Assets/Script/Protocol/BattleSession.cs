@@ -22,9 +22,9 @@ public class BattleSession : Session
 {
     public static BattleSession _instance;
     public event Action<ChatStruct> chatRoomRecvEvent;
-    public event Action<Protocol.P_Player> quitRoomRecvEvent;
+    public event Action<Protocol.P_LobbyPlayer> quitRoomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
-    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
+    public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
 
     public BattleSession tmp()
     {
@@ -126,12 +126,12 @@ private void Start()
     {
         Debug.Log("Handle_EnterRoomMessage");
         int headerSize = sizeof(PacketHeader);
-        List<Protocol.P_Player> players = new List<Protocol.P_Player>();
+        List<Protocol.P_LobbyPlayer> players = new List<Protocol.P_LobbyPlayer>();
         Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
         for (int i = 0; i < pkt.Players.Count; i += 1)
         {
-            Protocol.P_Player p = pkt.Players[i];
+            Protocol.P_LobbyPlayer p = pkt.Players[i];
             players.Add(p);
         }
         Debug.Log("players.count: "+players.Count);
@@ -157,7 +157,7 @@ private void Start()
         Debug.Log("Handle_QuitRoomMessage");
         int headerSize = sizeof(PacketHeader);
 
-        Protocol.P_Player pkt = Protocol.P_Player.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+        Protocol.P_LobbyPlayer pkt = Protocol.P_LobbyPlayer.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {

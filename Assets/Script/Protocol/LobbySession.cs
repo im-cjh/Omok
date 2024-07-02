@@ -22,8 +22,8 @@ public class LobbySession : Session
 
     public event Action<Dictionary<int, Room>> roomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
-    public event Action<List<Protocol.P_Player>> enterRoomRecvEvent;
-    public event Action<Protocol.P_Player> quitRoomRecvEvent;
+    public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
+    public event Action<Protocol.P_LobbyPlayer> quitRoomRecvEvent;
     public event Action<ChatStruct> chatRoomRecvEvent;
 
     public static LobbySession Instance
@@ -111,7 +111,7 @@ public class LobbySession : Session
         int headerSize = sizeof(PacketHeader);
         
 
-        Protocol.P_Player pkt = Protocol.P_Player.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+        Protocol.P_LobbyPlayer pkt = Protocol.P_LobbyPlayer.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
@@ -142,12 +142,12 @@ public class LobbySession : Session
     {
         Debug.Log("Handle_EnterRoomMessage");
         int headerSize = sizeof(PacketHeader);
-        List<Protocol.P_Player> players = new List<Protocol.P_Player>();
+        List<Protocol.P_LobbyPlayer> players = new List<Protocol.P_LobbyPlayer>();
         Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
         for (int i = 0; i < pkt.Players.Count; i += 1)
         {
-            Protocol.P_Player p = pkt.Players[i];
+            Protocol.P_LobbyPlayer p = pkt.Players[i];
             players.Add(p);
         }
 
