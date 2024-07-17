@@ -59,7 +59,6 @@ public abstract class Session : MonoBehaviour
                     // 헤더에 기록된 패킷 크기를 파싱할 수 있어야 한다
                     if (bytesRead < header->size)
                     {
-                        Debug.Log("me");
                         return;
                     }
                     HandlePacket(_recvBuffer, header->size, (ePacketID)header->id);
@@ -92,6 +91,8 @@ public abstract class Session : MonoBehaviour
             Debug.Log("Connected to server!");
 
             _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
+
+
         }
         catch (Exception ex)
         {
@@ -114,9 +115,6 @@ public abstract class Session : MonoBehaviour
             return;
         }
 
-        
-
-        // 실제 네트워크 전송 코드
         try
         {
             // 네트워크 스트림을 통해 데이터 전송

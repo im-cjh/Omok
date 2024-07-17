@@ -46,7 +46,7 @@ public class RoomManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log("user error");
+            Debug.Log(e.Message);
         }
     }
 

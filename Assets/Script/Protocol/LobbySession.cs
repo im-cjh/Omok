@@ -89,7 +89,7 @@ public class LobbySession : Session
             int headerSize = Marshal.SizeOf<PacketHeader>();
             Debug.Log("Handle_MatchmakingMessage");
             Protocol.S2CBattleServerAddr pkt = Protocol.S2CBattleServerAddr.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
-            Debug.Log(pkt.BattleServerIp + " : " + pkt.Port + " : " + pkt.RoomID);
+            
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
                 LobbyManager.Instance.RoomID = pkt.RoomID;

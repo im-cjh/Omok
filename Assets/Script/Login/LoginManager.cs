@@ -57,6 +57,7 @@ public class LoginManager : MonoBehaviour
                         User.Instance.userName = jsonObj["name"].ToString();
                         User.Instance.id = Convert.ToInt32(jsonObj["id"].ToString());
                         Debug.Log("로그인 성공!");
+                        Debug.Log(User.Instance.userName);
 
                         // 추가 작업 수행
                         LobbySession.Instance.Connect("127.0.0.1", 7777);

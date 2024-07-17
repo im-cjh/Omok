@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="VisualElement" style="flex-grow: 1; background-color: rgb(255, 0, 0); width: 25%; align-self: flex-end;">
-        <ui:Label tabindex="-1" text="미니맵안보는쉔" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-        <ui:ListView focusable="true" name="listView" />
-    </ui:VisualElement>
-</ui:UXML>

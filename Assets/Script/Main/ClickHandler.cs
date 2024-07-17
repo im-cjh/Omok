@@ -19,7 +19,6 @@ public class ClickHandler : MonoBehaviour
     public GameObject stonePreviewPrefab; // 바둑알 미리보기 프리팹
 
 
-    public Transform board; // 바둑판의 Transform
 
     private GameObject currentStonePreview; // 바둑알 미리보기 프리팹
     private const float cell = 34.4f;
@@ -111,20 +110,6 @@ public class ClickHandler : MonoBehaviour
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
         BattleSession.Instance.Send(sendBuffer);
-
-        //서버에 position전송
-        //Task.Run(async () =>
-        //{
-        //    Protocol.P_GameContent pkt = new Protocol.P_GameContent();
-        //    pkt.RoomID = LobbyManager.Instance.GetSelectedRoomID();
-        //    Debug.Log("RoomID: " + pkt.RoomID);
-        //    pkt.XPos = pPosition.x;
-        //    pkt.YPos = pPosition.y;
-        //    pkt.StoneColor = (int)pColor;
-        //    byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
-
-        //    await _session.Send(sendBuffer);
-        //});
 
     }
 }

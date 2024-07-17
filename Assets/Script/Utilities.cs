@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,24 @@ static public class Utilities
         {
             Debug.LogError($"{path} 오브젝트를 찾을 수 없습니다.");
             return null;
+        }
+    }
+    static public void WriteErrorLog(Exception e)
+    {
+        string path = Application.persistentDataPath + "/OmokLog.txt";
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(path, true))
+            {
+                writer.WriteLine(DateTime.Now.ToString());
+                writer.WriteLine(e.Message);
+                writer.WriteLine(e.StackTrace);
+                writer.WriteLine();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Failed to write to log file: " + ex.Message);
         }
     }
 }

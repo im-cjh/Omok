@@ -16,20 +16,19 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
+
+
 
 public class BattleSession : Session
 {
+    private GameManagerChecker gameManagerChecker;
+
     public static BattleSession _instance;
     public event Action<ChatStruct> chatRoomRecvEvent;
     public event Action<Protocol.P_LobbyPlayer> quitRoomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
     public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
 
-    public BattleSession tmp()
-    {
-        return _instance; 
-    }    
     public static BattleSession Instance
     {
         get
@@ -55,7 +54,7 @@ public class BattleSession : Session
 private void Start()
     {
         base.Start();
-
+        gameManagerChecker = FindObjectOfType<GameManagerChecker>();
         DontDestroyOnLoad(this);
     }
     // Update is called once per frame
@@ -69,7 +68,8 @@ private void Start()
         Debug.Log("RequestEnterFastRoom");
         Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
         pkt.RoomID = roomId;
-        pkt.UserID = LobbySession.Instance._user.id;
+        pkt.UserID = User.Instance.id;
+        pkt.UserName = User.Instance.userName;
 
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_FAST_ROOM);
 
@@ -104,23 +104,65 @@ private void Start()
                 Handle_MatchmakingMessage(byteBuffer, pLen);
                 break;
             case ePacketID.GAME_START_MESSAGE:
-                Handle_StartGame(byteBuffer, pLen);
+                _ = Handle_StartGame(byteBuffer, pLen).ContinueWith(t =>
+                {
+                    if (t.Exception != null)
+                    {
+                        // 예외 처리
+                        foreach (var ex in t.Exception.InnerExceptions)
+                        {
+                            Debug.LogError(ex);
+                            Utilities.WriteErrorLog(ex);
+                        }
+                    }
+                }, TaskContinuationOptions.OnlyOnFaulted);
                 break;
         }
 
     }
 
-    unsafe private void Handle_StartGame(byte[] pBuffer, int pLen)
+    private async Task Handle_StartGame(byte[] pBuffer, int pLen)
     {
         Debug.Log("Handle_StartGame");
-        int headerSize = sizeof(PacketHeader);
-
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        unsafe
         {
-            //main씬의 판넬 닫기
-            GameManager.Instance.CloseLoadingPanel();
-        });
+            int headerSize = sizeof(PacketHeader);
+
+            Protocol.S2CGameStart pkt = Protocol.S2CGameStart.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+            Debug.Log("Username1: " + pkt.Players[0].UserName);
+            Debug.Log("Username2: " + pkt.Players[1].UserName);
+            Debug.Log("Stonetype1" + pkt.Players[0].StoneType);
+            Debug.Log("Stonetype2" + pkt.Players[1].StoneType);
+        }
+        try
+        {
+            // 비동기적으로 게임 매니저가 준비될 때까지 대기
+            await gameManagerChecker.WaitForGameManagerAsync();
+
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                try
+                {
+                    GameManager.Instance.CloseLoadingPanel();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                    Utilities.WriteErrorLog(e);
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                Utilities.WriteErrorLog(e);
+            });
+
+            Debug.Log(e.Message);
+        }
     }
+
 
     unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
     {
@@ -135,7 +177,7 @@ private void Start()
             players.Add(p);
         }
         Debug.Log("players.count: "+players.Count);
-        Debug.Log(enterRoomRecvEvent);
+        
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             enterRoomRecvEvent(players);

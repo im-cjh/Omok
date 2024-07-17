@@ -68,12 +68,18 @@ public class LobbyManager : MonoBehaviour
 
     public void OnClickedFastGame()
     {
-
-        Task.Run(async () =>
+        try
         {
-            byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
-            await LobbySession.Instance.Send(sendBuffer);
-        });
+            Task.Run(async () =>
+            {
+                byte[] sendBuffer = PacketHandler.SerializeHeader(ePacketID.MATCHMAKIING_MESSAGE);
+                await LobbySession.Instance.Send(sendBuffer);
+            });
+        }
+        catch (Exception ex)
+        {
+            Utilities.WriteErrorLog(ex);
+        }
     }
 
     public void EnterFastRoom()
