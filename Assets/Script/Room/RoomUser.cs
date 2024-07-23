@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class RoomUser : MonoBehaviour
 {
-    Text _userName;
+    public Text _userName;
     GameObject childObject;
 
     public void Start()

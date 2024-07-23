@@ -87,11 +87,13 @@ public class LobbySession : Session
         try
         {
             int headerSize = Marshal.SizeOf<PacketHeader>();
-            Debug.Log("Handle_MatchmakingMessage");
+            Debug.Log("LobbySession: Handle_MatchmakingMessage");
+            
             Protocol.S2CBattleServerAddr pkt = Protocol.S2CBattleServerAddr.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
             
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
+                SceneChanger.ChangeGameScene();
                 LobbyManager.Instance.RoomID = pkt.RoomID;
                 BattleSession.Instance.Connect(pkt.BattleServerIp, pkt.Port);
                 BattleSession.Instance.RequestEnterFastRoom(pkt.RoomID);

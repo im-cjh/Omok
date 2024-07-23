@@ -81,7 +81,7 @@ public class ChatManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        LobbySession.Instance.chatRoomRecvEvent -= UpdateChat;
+        //LobbySession.Instance.chatRoomRecvEvent -= UpdateChat;
         BattleSession.Instance.chatRoomRecvEvent -= UpdateChat;
     }
 }

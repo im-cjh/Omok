@@ -28,6 +28,7 @@ public class BattleSession : Session
     public event Action<Protocol.P_LobbyPlayer> quitRoomRecvEvent;
     public event Action<Protocol.P_GameContent> contentRecvEvent;
     public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
+    public event Action<Protocol.S2CGameStart> enterFastRoomEvent;
 
     public static BattleSession Instance
     {
@@ -37,12 +38,6 @@ public class BattleSession : Session
             {
                 // Scene에서 RoomManager를 찾아 인스턴스화
                 _instance = FindObjectOfType<BattleSession>();
-                //if (_instance == null)
-                //{
-                //    // RoomManager가 없는 경우 새로 생성
-                //    GameObject obj = new GameObject("lobbySession");
-                //    _instance = obj.AddComponent<LobbySession>();
-                //}
             }
             return _instance;
         }
@@ -50,8 +45,8 @@ public class BattleSession : Session
 
 
 
-// Start is called before the first frame update
-private void Start()
+    // Start is called before the first frame update
+    private void Start()
     {
         base.Start();
         gameManagerChecker = FindObjectOfType<GameManagerChecker>();
@@ -77,7 +72,7 @@ private void Start()
         {
             await Send(sendBuffer);
         });
-        
+
     }
 
     protected override void HandlePacket(Span<byte> pBuffer, int pLen, ePacketID pID)
@@ -100,8 +95,7 @@ private void Start()
             case ePacketID.QUIT_ROOM_MESSAGE:
                 Handle_QuitRoomMessage(byteBuffer, pLen);
                 break;
-            case ePacketID.MATCHMAKED_MESSAGE:
-                Handle_MatchmakingMessage(byteBuffer, pLen);
+            case ePacketID.ENTER_FAST_ROOM:
                 break;
             case ePacketID.GAME_START_MESSAGE:
                 _ = Handle_StartGame(byteBuffer, pLen).ContinueWith(t =>
@@ -121,19 +115,27 @@ private void Start()
 
     }
 
+
+
     private async Task Handle_StartGame(byte[] pBuffer, int pLen)
     {
         Debug.Log("Handle_StartGame");
+        int headerSize = 0;
         unsafe
         {
-            int headerSize = sizeof(PacketHeader);
+            headerSize = sizeof(PacketHeader);
+            Debug.Log(headerSize + "zz");
 
             Protocol.S2CGameStart pkt = Protocol.S2CGameStart.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+
+            enterFastRoomEvent(pkt);
+
             Debug.Log("Username1: " + pkt.Players[0].UserName);
             Debug.Log("Username2: " + pkt.Players[1].UserName);
             Debug.Log("Stonetype1" + pkt.Players[0].StoneType);
             Debug.Log("Stonetype2" + pkt.Players[1].StoneType);
         }
+        
         try
         {
             // 비동기적으로 게임 매니저가 준비될 때까지 대기
@@ -143,7 +145,10 @@ private void Start()
             {
                 try
                 {
+                    Debug.Log(User.Instance.userName);
+
                     GameManager.Instance.CloseLoadingPanel();
+                    GameManager.Instance.isStarted = true;
                 }
                 catch (Exception e)
                 {
@@ -176,21 +181,11 @@ private void Start()
             Protocol.P_LobbyPlayer p = pkt.Players[i];
             players.Add(p);
         }
-        Debug.Log("players.count: "+players.Count);
-        
+        Debug.Log("players.count: " + players.Count);
+
         UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
             enterRoomRecvEvent(players);
-        });
-    }
-
-    unsafe private void Handle_MatchmakingMessage(byte[] pBuffer, int pLen)
-    {
-        int headerSize = sizeof(PacketHeader);
-
-        UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        {
-            LobbyManager.Instance.EnterFastRoom();
         });
     }
 
@@ -256,5 +251,5 @@ private void Start()
         });
     }
 
-   
+
 }

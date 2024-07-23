@@ -616,6 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30294246630ef9540aeea8906b157255, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStarted: 0
   _panel: {fileID: 944124718}
 --- !u!4 &219828563
 Transform:
@@ -644,7 +645,6 @@ GameObject:
   - component: {fileID: 326196815}
   - component: {fileID: 326196814}
   - component: {fileID: 326196813}
-  - component: {fileID: 326196816}
   m_Layer: 5
   m_Name: UserInfo
   m_TagString: Untagged
@@ -740,20 +740,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 326196811}
   m_CullTransparentMesh: 1
---- !u!114 &326196816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 326196811}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 607a4f2e1c4a7824ea8bba028f83af04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roomName: {fileID: 952313486}
-  userInfos: []
 --- !u!1 &334100949
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,7 +3215,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Name
+  m_Text: User1's Name
 --- !u!222 &1886203189
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3530,7 +3516,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 326196816}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: RoomManager, Assembly-CSharp
         m_MethodName: QuitRoom
         m_Mode: 1

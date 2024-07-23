@@ -1,3 +1,4 @@
+using PimDeWitte.UnityMainThreadDispatcher;
 using Protocol;
 using System;
 using System.Collections;
@@ -15,45 +16,22 @@ public class RoomManager : MonoBehaviour
     [SerializeField]
     RoomUser[] userInfos;
 
-    private List<Protocol.P_LobbyPlayer> _players;
+    //private List<Protocol.P_LobbyPlayer> _players;
+    //private List<Protocol.P_LobbyPlayer> _players;
+
     // Start is called before the first frame update
 
-   
+    
 
-    private void Awake()
+    private void Start()
     {
-        LobbySession.Instance.enterRoomRecvEvent += OnPlayerEntered;
-        LobbySession.Instance.quitRoomRecvEvent += OnPlayerQuit;
+        //LobbySession.Instance.enterRoomRecvEvent += OnPlayerEntered;
+        //LobbySession.Instance.quitRoomRecvEvent += OnPlayerQuit;
 
-        BattleSession.Instance.enterRoomRecvEvent += OnPlayerEntered;
-        BattleSession.Instance.quitRoomRecvEvent += OnPlayerQuit;
-    }
-    void Start()
-    {
-        _players = new List<Protocol.P_LobbyPlayer>(2);  
-        try
-        {
-        
-
-            userInfos = new RoomUser[2];
-            GameObject tmp = gameObject.transform.GetChild(1).gameObject;
-            userInfos[0] = tmp.GetComponent<RoomUser>();
-            
-            tmp = gameObject.transform.GetChild(2).gameObject;
-            userInfos[1] = tmp.GetComponent<RoomUser>();
-
-            roomName.text = LobbyManager.Instance.GetSelectedRoom().roomName;
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        BattleSession.Instance.enterFastRoomEvent += OnPlayerEntered;
+        DontDestroyOnLoad(this);
+        //BattleSession.Instance.enterRoomRecvEvent += OnPlayerEntered;
+        //BattleSession.Instance.quitRoomRecvEvent += OnPlayerQuit;
     }
 
     public void QuitRoom()
@@ -79,24 +57,41 @@ public class RoomManager : MonoBehaviour
     public void OnPlayerQuit(Protocol.P_LobbyPlayer pPlayer)
     {
         Debug.Log("OnPlayerQuit");
-        _players.Remove(pPlayer);
-        UpdateUserInfo();
+        //_players.Remove(pPlayer);
+        //UpdateUserInfo();
         //throw new NotImplementedException();
     }
-
-    public void OnPlayerEntered(List<Protocol.P_LobbyPlayer> pPlayers)
+    public void OnPlayerEntered(Protocol.S2CGameStart pPlayers)
     {
-        //Debug.Log(pPlayers.Count);
-        _players = pPlayers;
-        //UpdateUserInfo();
-        SceneChanger.ChangeGameScene();
-    }
+        Debug.Log("OnPlayerEntered") ;
 
-    private void UpdateUserInfo()
-    {
-        for (int i = 0; i < _players.Count; i+=1)
+        userInfos = new RoomUser[2];
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            userInfos[i].SetInfo(_players[i].UserName);
-        }
+            try
+            {
+
+                roomName = Utilities.FindAndAssign<Text>("Canvas/UserInfo/RoomName");
+                userInfos[0] = Utilities.FindAndAssign<RoomUser>("Canvas/UserInfo/User1");
+                userInfos[1] = Utilities.FindAndAssign<RoomUser>("Canvas/UserInfo/User2");
+
+                for (int i = 0; i < 2; i += 1)
+                {
+                    userInfos[i].SetInfo(pPlayers.Players[i].UserName);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        });
+        Debug.Log("OnMainSceneLoaded End");
     }
+    //private void UpdateUserInfo()
+    //{
+    //    for (int i = 0; i < _players.Count; i+=1)
+    //    {
+    //        userInfos[i].SetInfo(_players[i].UserName);
+    //    }
+    //}
 }

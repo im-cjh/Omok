@@ -84,7 +84,7 @@ public class LobbyManager : MonoBehaviour
 
     public void EnterFastRoom()
     {
-        //SceneChanger.ChangeGameScene();
+        SceneChanger.ChangeGameScene();
     }
 
     public void EnterCustomRoom()

@@ -7,7 +7,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
-    private bool isStarted = false;
+    public bool isStarted = false;
 
     [SerializeField]
     GameObject _panel;
