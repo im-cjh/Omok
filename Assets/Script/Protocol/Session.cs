@@ -88,8 +88,6 @@ public abstract class Session : MonoBehaviour
             _client.Connect(pIP, pPort);
             
             _stream = _client.GetStream();
-            Debug.Log("Connected to server!");
-
             _stream.BeginRead(_recvBuffer, 0, _recvBuffer.Length, RecvCallback, null);
 
 

@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,10 +8,13 @@ public class  ChatStruct
 {
     public string name;
     public string content;
+    public Color color = Color.white;
 }
 
 public class ChatManager : MonoBehaviour
 {
+    private static ChatManager _instance;
+
     public ScrollRect scrollView;
 
     [SerializeField]
@@ -23,6 +27,17 @@ public class ChatManager : MonoBehaviour
     private GameObject textChatPrefab; //대화를 출력하는 Text UI 프리팹
 
     private string _name; //임시 아이디
+
+    public static ChatManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindObjectOfType<ChatManager>();
+            
+            return _instance;
+        }
+    }
 
     private void Start()
     {
@@ -61,7 +76,7 @@ public class ChatManager : MonoBehaviour
 
         //대화 입력창에 있는 내용을 대화창에 출력(ID: 내용) 
         clone.GetComponent<TextMeshProUGUI>().text = $"{pChat.name}: {pChat.content}";
-
+        clone.GetComponent<TextMeshProUGUI>().color = pChat.color;
         Canvas.ForceUpdateCanvases();
         scrollView.verticalNormalizedPosition = 0f;
     }
@@ -77,11 +92,5 @@ public class ChatManager : MonoBehaviour
                 inputField.ActivateInputField();
             }
         }
-    }
-
-    private void OnDestroy()
-    {
-        //LobbySession.Instance.chatRoomRecvEvent -= UpdateChat;
-        BattleSession.Instance.chatRoomRecvEvent -= UpdateChat;
     }
 }

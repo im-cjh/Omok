@@ -1,12 +1,15 @@
 using Protocol;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Color = UnityEngine.Color;
 
-enum eStone
+public enum eStone
 {
     None = 0,
     BLACK = 1,
@@ -18,12 +21,26 @@ public class ClickHandler : MonoBehaviour
     public GameObject stonePrefab; // 바둑알 프리팹
     public GameObject stonePreviewPrefab; // 바둑알 미리보기 프리팹
 
-
-
     private GameObject currentStonePreview; // 바둑알 미리보기 프리팹
     private const float cell = 34.4f;
     private eStone[,] _stones;
-    private eStone _stoneColor = eStone.BLACK;
+    private eStone _stoneColor = eStone.None;
+    private static ClickHandler _instance;
+    public bool _myTurn = false;
+
+    public static ClickHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Scene에서 RoomManager를 찾아 인스턴스화
+                _instance = FindObjectOfType<ClickHandler>();
+            }
+            return _instance;
+        }
+    }
+
 
     private void Start()
     {
@@ -39,6 +56,9 @@ public class ClickHandler : MonoBehaviour
         {
             Vector2 pos = new Vector2 (pContent.XPos, pContent.YPos);
             PlaceStone(pos, (eStone)pContent.StoneColor);
+
+             if((eStone)pContent.StoneColor != _stoneColor)
+                _myTurn = true;           
         }
         catch (Exception e)
         {
@@ -48,6 +68,9 @@ public class ClickHandler : MonoBehaviour
 
     void Update()
     {
+        if (_myTurn == false)
+            return;
+
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //좌표 보정
         float adjustedX = (Mathf.Round((pos.x*100) / cell) * cell)/100;
@@ -83,18 +106,28 @@ public class ClickHandler : MonoBehaviour
         }
     }
 
+
+
     void PlaceStone(Vector2 pPosition, eStone pColor)
     {
-        
-        //stonePrefab을 position에 배치하면 됩니다.
-        Instantiate(stonePrefab, pPosition, Quaternion.identity);
+        GameObject newStone = Instantiate(stonePrefab, pPosition, Quaternion.identity);
 
+        SpriteRenderer stoneRenderer = newStone.GetComponent<SpriteRenderer>();
+
+        if (pColor == eStone.BLACK)
+            stoneRenderer.color = Color.black;
+        else if (pColor == eStone.WHITE)
+            stoneRenderer.color = Color.white;
+        
+
+        // 인스턴스화된 돌의 위치를 업데이트하고, 게임 상태를 업데이트합니다.
         {
-            int adjY = 9+(int)(pPosition.y / 0.34);
+            int adjY = 9 + (int)(pPosition.y / 0.34);
             int adjX = 9 + (int)(pPosition.x / 0.34);
-            
-            _stones[adjY, adjX] = _stoneColor;
+
+            _stones[adjY, adjX] = pColor;
         }
+        _myTurn = false;
     }
 
     void PlaceStoneAndSend(Vector2 pPosition, eStone pColor)
@@ -103,13 +136,22 @@ public class ClickHandler : MonoBehaviour
 
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
         pkt.RoomID = LobbyManager.Instance.RoomID;
-        Debug.Log("RoomID: " + pkt.RoomID);
         pkt.YPos = pPosition.y;
         pkt.XPos = pPosition.x;
         pkt.StoneColor = (int)pColor;
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.CONTENT_MESSAGE);
 
         BattleSession.Instance.Send(sendBuffer);
+    }
 
+    public void SetStoneColor(Color pColor)
+    {
+        stonePrefab.GetComponent<SpriteRenderer>().color = pColor;
+        stonePreviewPrefab.GetComponent<SpriteRenderer>().color = pColor;
+
+        if(pColor == Color.black)
+            _stoneColor = eStone.BLACK;
+        if (pColor == Color.white)
+            _stoneColor = eStone.WHITE;
     }
 }

@@ -31,10 +31,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         //Debug.Log(isStarted + " is stared");
-        if (isStarted)
-        {
-            _panel.SetActive(false);
-        }
+        //if (isStarted)
+        //{
+        //    _panel.SetActive(false);
+        //}
     }
 
     public void CloseLoadingPanel()

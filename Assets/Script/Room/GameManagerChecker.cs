@@ -21,14 +21,11 @@ public class GameManagerChecker : MonoBehaviour
             yield return null;
         }
 
-        // 조건이 만족되면 TaskCompletionSource 완료
-        Debug.Log("조건이 만족되면 TaskCompletionSource 완료");
         tcs.SetResult(true);
     }
 
     public async Task WaitForGameManagerAsync()
     {
         await tcs.Task;
-        Debug.Log("GameManager is now available.");
     }
 }

@@ -29,6 +29,7 @@ public class BattleSession : Session
     public event Action<Protocol.P_GameContent> contentRecvEvent;
     public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
     public event Action<Protocol.S2CGameStart> enterFastRoomEvent;
+    public event Action<eStone> gameSetEvent;
 
     public static BattleSession Instance
     {
@@ -121,20 +122,16 @@ public class BattleSession : Session
     {
         Debug.Log("Handle_StartGame");
         int headerSize = 0;
+        String userName;
         unsafe
         {
             headerSize = sizeof(PacketHeader);
-            Debug.Log(headerSize + "zz");
-
-            Protocol.S2CGameStart pkt = Protocol.S2CGameStart.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
-
-            enterFastRoomEvent(pkt);
-
-            Debug.Log("Username1: " + pkt.Players[0].UserName);
-            Debug.Log("Username2: " + pkt.Players[1].UserName);
-            Debug.Log("Stonetype1" + pkt.Players[0].StoneType);
-            Debug.Log("Stonetype2" + pkt.Players[1].StoneType);
         }
+
+        Protocol.S2CGameStart pkt = Protocol.S2CGameStart.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
+            
+        enterFastRoomEvent(pkt);
+        
         
         try
         {
@@ -145,14 +142,13 @@ public class BattleSession : Session
             {
                 try
                 {
-                    Debug.Log(User.Instance.userName);
-
+                    userName = User.Instance.userName;
                     GameManager.Instance.CloseLoadingPanel();
                     GameManager.Instance.isStarted = true;
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Debug.LogError(e);
                     Utilities.WriteErrorLog(e);
                 }
             });
@@ -216,29 +212,12 @@ public class BattleSession : Session
 
     unsafe private void Handle_WinnerMessage(byte[] pBuffer, int pLen)
     {
-        Debug.Log("Winner: me");
+        int headerSize = sizeof(PacketHeader);
+        Protocol.S2CWinner pkt = Protocol.S2CWinner.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
 
+        Debug.Log("Winner: " + (eStone)pkt.StoneColor);
+        gameSetEvent((eStone)pkt.StoneColor);
     }
-
-    //unsafe private void Handle_EnterRoomMessage(byte[] pBuffer, int pLen)
-    //{
-    //    Debug.Log("asd");
-    //    int headerSize = sizeof(PacketHeader);
-    //    List<Protocol.P_Player> players = new List<Protocol.P_Player>();
-    //    Protocol.S2CEnterRoom pkt = Protocol.S2CEnterRoom.Parser.ParseFrom(pBuffer, headerSize, pLen - headerSize);
-
-    //    for (int i = 0; i < pkt.Players.Count; i += 1)
-    //    {
-    //        Protocol.P_Player p = pkt.Players[i];
-    //        players.Add(p);
-    //    }
-
-    //    UnityMainThreadDispatcher.Instance().Enqueue(() =>
-    //    {
-    //        enterRoomRecvEvent(players);
-    //    });
-
-    //}
 
     unsafe private void Handle_ContentMessage(byte[] pBuffer, int pLen)
     {
