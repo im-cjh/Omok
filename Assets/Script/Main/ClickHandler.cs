@@ -27,6 +27,7 @@ public class ClickHandler : MonoBehaviour
     private eStone _stoneColor = eStone.None;
     private static ClickHandler _instance;
     public bool _myTurn = false;
+    public bool isGameSet = false;
 
     public static ClickHandler Instance
     {
@@ -68,7 +69,7 @@ public class ClickHandler : MonoBehaviour
 
     void Update()
     {
-        if (_myTurn == false)
+        if (_myTurn == false || isGameSet)
             return;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -132,7 +133,13 @@ public class ClickHandler : MonoBehaviour
 
     void PlaceStoneAndSend(Vector2 pPosition, eStone pColor)
     {
-        PlaceStone(pPosition, pColor);
+        {
+            int adjY = 9 + (int)(pPosition.y / 0.34);
+            int adjX = 9 + (int)(pPosition.x / 0.34);
+
+            if (_stones[adjY, adjX] != eStone.None)
+                return;
+        }
 
         Protocol.P_GameContent pkt = new Protocol.P_GameContent();
         pkt.RoomID = LobbyManager.Instance.RoomID;

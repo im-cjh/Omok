@@ -29,6 +29,7 @@ public class BattleSession : Session
     public event Action<Protocol.P_GameContent> contentRecvEvent;
     public event Action<List<Protocol.P_LobbyPlayer>> enterRoomRecvEvent;
     public event Action<Protocol.S2CGameStart> enterFastRoomEvent;
+    public event Action<Protocol.S2CGameStart> enterCustomRoomEvent;
     public event Action<eStone> gameSetEvent;
 
     public static BattleSession Instance
@@ -44,19 +45,12 @@ public class BattleSession : Session
         }
     }
 
-
-
     // Start is called before the first frame update
     private void Start()
     {
         base.Start();
         gameManagerChecker = FindObjectOfType<GameManagerChecker>();
         DontDestroyOnLoad(this);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public async Task RequestEnterFastRoom(int roomId)
@@ -66,6 +60,7 @@ public class BattleSession : Session
         pkt.RoomID = roomId;
         pkt.UserID = User.Instance.id;
         pkt.UserName = User.Instance.userName;
+        User.Instance.currentRoomID = roomId;
 
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_FAST_ROOM);
 
@@ -95,8 +90,6 @@ public class BattleSession : Session
                 break;
             case ePacketID.QUIT_ROOM_MESSAGE:
                 Handle_QuitRoomMessage(byteBuffer, pLen);
-                break;
-            case ePacketID.ENTER_FAST_ROOM:
                 break;
             case ePacketID.GAME_START_MESSAGE:
                 _ = Handle_StartGame(byteBuffer, pLen).ContinueWith(t =>
@@ -230,5 +223,15 @@ public class BattleSession : Session
         });
     }
 
+    public void Disconnect()
+    {
+        if (_client == null)
+            return;
+
+        _stream.Close();
+        _client.Close();
+        _stream = null;
+        _client = null;
+    }
 
 }

@@ -34,6 +34,13 @@ public class LoginManager : MonoBehaviour
         SignInPwdField = Utilities.FindAndAssign<TMP_InputField>("Canvas/SignInPanel/SignInBox/pwd_input");
     }
 
+    private void ChangeSignUpMode()
+    {
+        SignUpEmailField = Utilities.FindAndAssign<TMP_InputField>("Canvas/SignUpPanel/SignUpBox/email_input");
+        SignUpPwdField = Utilities.FindAndAssign<TMP_InputField>("Canvas/SignUpPanel/SignUpBox/pwd_input");
+        SignUpNameField = Utilities.FindAndAssign<TMP_InputField>("Canvas/SignUpPanel/SignUpBox/name_input");
+    }
+
     private async Task SignInAsync()
     {
         string url = "http://localhost:3000/login";
@@ -94,7 +101,11 @@ public class LoginManager : MonoBehaviour
 
     public async Task SignUpAsync()
     {
-        
+        UnityMainThreadDispatcher.Instance().Enqueue(async () =>
+        {
+            ChangeSignUpMode();
+        });
+
         // HTTP POST 요청을 보낼 엔드포인트 URL
         string url = "http://localhost:3000/signup";
 

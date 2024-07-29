@@ -40,7 +40,7 @@ public abstract class Session : MonoBehaviour
     // Start is called before the first frame update
     protected void Start()
     {
-        _client = new TcpClient();
+        //_client = new TcpClient();
         _user = FindObjectOfType<User>();
     }
 
@@ -85,6 +85,7 @@ public abstract class Session : MonoBehaviour
     {
         try
         {
+            _client = new TcpClient();
             _client.Connect(pIP, pPort);
             
             _stream = _client.GetStream();

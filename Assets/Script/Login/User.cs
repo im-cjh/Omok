@@ -15,6 +15,8 @@ public class User : MonoBehaviour
 
     public string userName;
     public int id;
+    public int currentRoomID;
+    public eStone stoneColor = eStone.None;
 
     public static User Instance
     {

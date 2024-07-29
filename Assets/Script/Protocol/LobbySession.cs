@@ -173,7 +173,7 @@ public class LobbySession : Session
 
     unsafe void Handle_RoomsMessage(byte[] buffer, int len)
     {
-        Debug.Log("Handle_RoomsMessage");
+        Debug.Log("Lobby: Handle_RoomsMessage");
         int headerSize = sizeof(PacketHeader);
         Protocol.S2CRoomList rooms = Protocol.S2CRoomList.Parser.ParseFrom(buffer, headerSize, len - headerSize);
         Dictionary<int, Room> roomList = new Dictionary<int, Room>();

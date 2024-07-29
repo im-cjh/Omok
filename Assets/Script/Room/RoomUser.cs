@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 public class RoomUser : MonoBehaviour
 {
     public Text _userName;
+    public Text _userWinRate;
     public SpriteRenderer stoneType;
     public eStone _stoneColor;
 
@@ -15,7 +17,7 @@ public class RoomUser : MonoBehaviour
     public void Start()
     {
         _userName = gameObject.transform.Find("Name").gameObject.GetComponent<Text>(); ;
-        //_userName = childObject.GetComponent<Text>();
+        _userWinRate = gameObject.transform.Find("Desc").gameObject.GetComponent<Text>(); ;
         stoneType = gameObject.transform.Find("StoneType").gameObject.GetComponent<SpriteRenderer>(); 
     }
     public void SetInfo(string name)
@@ -32,5 +34,10 @@ public class RoomUser : MonoBehaviour
             _stoneColor = eStone.WHITE;
         else
             Debug.LogError("SetStoneColor: Unexpected Color " + pColor);
+    }
+
+    public void SetWinRate(Int32 pWin, Int32 pLose)
+    {
+        _userWinRate.text = pWin + "½Â " + pLose + "ÆÐ";
     }
 }
