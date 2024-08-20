@@ -97,6 +97,9 @@ public class LobbyManager : MonoBehaviour
         Protocol.C2SEnterRoom pkt = new Protocol.C2SEnterRoom();
         pkt.RoomID = _selectedRoom.roomId;
         pkt.UserID = LobbySession.Instance._user.id;
+        pkt.Win = User.Instance.userWin;
+        pkt.Lose = User.Instance.userLose;
+
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_ROOM);
 
         Task.Run(async () =>

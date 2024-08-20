@@ -199,7 +199,17 @@ public class RoomManager : MonoBehaviour
                 ClickHandler.Instance.isGameSet = true;
 
                 //유저의 스톤과 승자의 스톤이 같다면 true
-                Utilities.StartUpdateWinRate(User.Instance.id, User.Instance.stoneColor == pStoneType ? true : false);
+                if (User.Instance.stoneColor == pStoneType)
+                {
+                    Utilities.StartUpdateWinRate(User.Instance.id, true);
+                    User.Instance.userWin += 1;
+                }
+                else
+                {
+                    Utilities.StartUpdateWinRate(User.Instance.id, false);
+                    User.Instance.userLose+= 1;
+                }
+
             }
             catch (Exception e)
             {

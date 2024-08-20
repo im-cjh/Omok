@@ -63,6 +63,8 @@ public class LoginManager : MonoBehaviour
                     {
                         User.Instance.userName = jsonObj["name"].ToString();
                         User.Instance.id = Convert.ToInt32(jsonObj["id"].ToString());
+                        User.Instance.userWin = Convert.ToInt32(jsonObj["win"].ToString());
+                        User.Instance.userLose = Convert.ToInt32(jsonObj["lose"].ToString());
 
                         // 추가 작업 수행
                         LobbySession.Instance.Connect("127.0.0.1", 7777);

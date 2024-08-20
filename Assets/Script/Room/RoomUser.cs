@@ -18,7 +18,9 @@ public class RoomUser : MonoBehaviour
     {
         _userName = gameObject.transform.Find("Name").gameObject.GetComponent<Text>(); ;
         _userWinRate = gameObject.transform.Find("Desc").gameObject.GetComponent<Text>(); ;
-        stoneType = gameObject.transform.Find("StoneType").gameObject.GetComponent<SpriteRenderer>(); 
+        stoneType = gameObject.transform.Find("StoneType").gameObject.GetComponent<SpriteRenderer>();
+
+        _userWinRate.text = User.Instance.userWin + "½Â " + User.Instance.userLose + "ÆÐ";
     }
     public void SetInfo(string name)
     {

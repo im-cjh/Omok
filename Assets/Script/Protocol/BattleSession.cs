@@ -60,6 +60,8 @@ public class BattleSession : Session
         pkt.RoomID = roomId;
         pkt.UserID = User.Instance.id;
         pkt.UserName = User.Instance.userName;
+        pkt.Win = User.Instance.userWin;    
+        pkt.Lose= User.Instance.userLose;    
         User.Instance.currentRoomID = roomId;
 
         byte[] sendBuffer = PacketHandler.SerializePacket(pkt, ePacketID.ENTER_FAST_ROOM);
